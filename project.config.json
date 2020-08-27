@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./dist",
-  "projectname": "weapp-scaffold-typescript",
-  "description": "小程序ts项目",
+  "projectname": "project-demo-ts",
+  "description": "",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,

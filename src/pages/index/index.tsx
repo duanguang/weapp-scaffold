@@ -1,6 +1,7 @@
-import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
-import { observer, inject } from '@tarojs/mobx'
+import Taro,{ Config } from '@tarojs/taro'
+import React,{ Component } from 'react'
+import { View,Button,Text } from '@tarojs/components'
+import { observer,inject } from 'mobx-react'
 
 import './index.less'
 
@@ -17,52 +18,36 @@ interface Index {
   props: PageStateProps;
 }
 
-@inject('counterStore')
+@inject('store')
 @observer
 class Index extends Component {
+  componentWillMount() { }
 
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-  config: Config = {
-    navigationBarTitleText: '首页'
-  }
+  componentDidMount() { }
 
-  componentWillMount () { }
+  componentWillUnmount() { }
 
-  componentWillReact () {
-    console.log('componentWillReact')
-  }
+  componentDidShow() { }
 
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
+  componentDidHide() { }
 
   increment = () => {
-    const { counterStore } = this.props
+    const { counterStore } = this.props.store
     counterStore.increment()
   }
 
   decrement = () => {
-    const { counterStore } = this.props
+    const { counterStore } = this.props.store
     counterStore.decrement()
   }
 
   incrementAsync = () => {
-    const { counterStore } = this.props
+    const { counterStore } = this.props.store
     counterStore.incrementAsync()
   }
 
-  render () {
-    const { counterStore: { counter } } = this.props
+  render() {
+    const { counterStore: { counter } } = this.props.store
     return (
       <View className='index'>
         <Button onClick={this.increment}>+</Button>
@@ -74,4 +59,4 @@ class Index extends Component {
   }
 }
 
-export default Index  as ComponentType
+export default Index
