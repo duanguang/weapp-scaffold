@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "小程序ts项目",
+  "templateInfo": {
+    "name": "mobx",
+    "typescript": true,
+    "css": "less"
+  },
   "main": "index.js",
   "scripts": {
     "build:qa": "cross-env environment=qa taro build --type weapp",
@@ -66,6 +71,7 @@
     "@typescript-eslint/parser": "^2.x",
     "@typescript-eslint/eslint-plugin": "^2.x",
     "typescript": "^3.7.0",
+    "webpack-bundle-analyzer": "^3.8.0",
     "cross-env": "^2.0.1",
     "@commitlint/cli": "^7.3.2",
     "@commitlint/config-conventional": "^7.3.1",
