@@ -1371,7 +1371,7 @@
     resolve "1.15.1"
     yauzl "2.10.0"
 
-"@tarojs/mini-runner@^3.0.8":
+"@tarojs/mini-runner@3.0.8":
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/@tarojs/mini-runner/-/mini-runner-3.0.8.tgz#eb6f894d4d4d5b8804680deaf9731e7a1ee4b5a6"
   integrity sha512-Wii0mUJ6D7f2oeJ2bKnrHRM6BqKW5qoryWyEhsRxg4b6uDbxhnWElhqDZsgeQUoqL9hIxd6V0uIjaV89aF4Lrw==
@@ -4580,8 +4580,8 @@ fd-slicer@~1.1.0:
 
 figgy-pudding@^3.5.1:
   version "3.5.2"
-  resolved "https://r.cnpmjs.org/figgy-pudding/download/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
-  integrity sha1-tO7oFIq7Adzx0aw0Nn1Z4S+mHW4=
+  resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
+  integrity sha512-0btnI/H8f2pavGMN8w40mlSKOfTK2SVJmBfBeVIj3kNw0swwgzyRq0d5TJVOwodFmtvpPeWPN/MCcfuWF0Ezbw==
 
 figures@^3.0.0:
   version "3.2.0"
@@ -9564,9 +9564,9 @@ ssr-window@^2.0.0:
   integrity sha1-mMMBrvmVIzF/jWlhjwAQeRCW78Q=
 
 ssri@^6.0.1:
-  version "6.0.1"
-  resolved "https://r.cnpmjs.org/ssri/download/ssri-6.0.1.tgz#2a3c41b28dd45b62b63676ecb74001265ae9edd8"
-  integrity sha1-KjxBso3UW2K2Nnbst0ABJlrp7dg=
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/ssri/-/ssri-6.0.2.tgz#157939134f20464e7301ddba3e90ffa8f7728ac5"
+  integrity sha512-cepbSq/neFK7xB6A50KHN0xHDotYzq58wWCa5LeWqnPrHG8GzfEjO/4O8kpmcGW+oaxkvhEJCWgbgNk4/ZV93Q==
   dependencies:
     figgy-pudding "^3.5.1"
 
