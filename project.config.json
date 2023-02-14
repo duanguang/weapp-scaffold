@@ -1,16 +1,15 @@
 {
-  "miniprogramRoot": "dist/",
-  "projectname": "project-demo",
-  "description": "",
+  "miniprogramRoot": "./dist",
+  "projectname": "taro-weapp-scaffold",
+  "description": "taro 小程序脚手架项目",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,
     "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
     "postcss": false,
     "minified": false
   },
-  "compileType": "miniprogram",
-  "simulatorType": "wechat",
-  "simulatorPluginLibVersion": {},
-  "condition": {}
+  "compileType": "miniprogram"
 }

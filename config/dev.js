@@ -3,7 +3,8 @@ module.exports = {
     NODE_ENV: '"development"',
     environment: JSON.stringify(process.env.environment || 'test')
   },
-  defineConstants: {},
+  defineConstants: {
+  },
   mini: {},
   h5: {}
 }
