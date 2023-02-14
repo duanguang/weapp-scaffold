@@ -1,13 +1,10 @@
 import {action, observable } from 'mobx';
-import Store from 'brain-store';
-import { StoreModules } from 'brain-store';
-import { StaticMeta as StoreMeta } from 'brain-store/types/api/meta';
-
+import { StoreMeta } from 'types/core.store';
+import { StoreModules,Store } from './core.store';
 @StoreModules
-export default class UserInfoStore extends Store{
+export default class UserStore extends Store{
     static meta:StoreMeta={
         ...Store.meta,
-        // className:'UserInfoStore'
     }
     @observable name='xiaoming'
     @action setName(name:string) {

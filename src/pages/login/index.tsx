@@ -2,16 +2,15 @@ import { Component,PropsWithChildren } from 'react'
 import { View,Text,Image,Button } from '@tarojs/components'
 import './index.less';
 import descLog from "@/assets/image/desc-bg.png";
-// import { bind, observer } from 'brain-store-react';
-// import UserInfoStore from '@/store/user.store';
 import Taro from '@tarojs/taro';
-
+import { bind,observer } from '@/store/core.store';
+import UserStore from '@/store/user.store';
 const baseCls = `legions-login`;
 interface IProps{
-    // store:UserInfoStore
+    store:UserStore
 }
-// @bind({ store: UserInfoStore })
-// @observer
+@bind({ store: UserStore })
+@observer
 export default class Index extends Component<PropsWithChildren&IProps> {
 
     componentWillMount() { }
@@ -25,7 +24,7 @@ export default class Index extends Component<PropsWithChildren&IProps> {
     componentDidHide() { }
 
     render() {
-        // console.log(this.props.store)
+        console.log(this.props.store)
         return (
             <View className={baseCls}>
                 <Text className={`text`}>—&nbsp;&nbsp;&nbsp;登录集成平台&nbsp;&nbsp;&nbsp;—</Text>

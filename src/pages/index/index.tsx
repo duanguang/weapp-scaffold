@@ -1,9 +1,8 @@
 import { Component,PropsWithChildren } from 'react'
 import { View,Text,Navigator } from '@tarojs/components'
 import './index.less'
-import Taro from '@tarojs/taro'
-// import Store from 'brain-store';
-// import UserInfoStore from '@/store/user.store';
+import UserStore from '@/store/user.store';
+import { Store } from '@/store/core.store'
 export default class Index extends Component<PropsWithChildren> {
 
   componentWillMount() { }
@@ -21,8 +20,8 @@ export default class Index extends Component<PropsWithChildren> {
 
   render() {
     
-    // const store = Store.getStore(UserInfoStore)
-    // console.dir(store)
+    const store = Store.getStore(UserStore)
+    console.dir(store)
     return (
       <View className='index'>
         <Navigator url='/packagea/pages/dog/index' hoverClass='navigator-hover'>狗</Navigator>
