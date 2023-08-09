@@ -1,0 +1,29 @@
+.bottom-tab {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 49PX;
+  background: white;
+  box-shadow: 0PX -5PX 10PX 0PX rgba(0, 0, 0, 0.03);
+  bottom: 0;
+}
+.bottom-tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bottom-tab-item-img {
+  margin: 5PX auto 0;
+  width: 24PX;
+  height: 24PX;
+}
+.bottom-tab-item-text {
+  height: 14PX;
+  line-height: 14PX;
+  font-size: 10PX;
+  font-family: PingFangSC-Light, PingFang SC;
+  font-weight: 300;
+  color: #444444;
+}
+/*# sourceMappingURL=./index.css.map */

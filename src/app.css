@@ -1,0 +1,56 @@
+.page {
+  background: #f5f5f5;
+  padding: 10px;
+}
+.m-flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gray-text-500 {
+  color: #777;
+}
+.gray-text-400 {
+  color: #999;
+}
+.gray-text-300 {
+  color: #bbb;
+}
+.gray-text-200 {
+  color: #eee;
+}
+.font-size-12 {
+  font-size: 24rpx;
+}
+.font-size-13 {
+  font-size: 26rpx;
+}
+.font-size-14 {
+  font-size: 28rpx;
+}
+.font-size-15 {
+  font-size: 30rpx;
+}
+.font-size-16 {
+  font-size: 32rpx;
+}
+.mt-6 {
+  margin-top: 12rpx;
+}
+.mt-8 {
+  margin-top: 16rpx;
+}
+.mt-10 {
+  margin-top: 20rpx;
+}
+.mt-12 {
+  margin-top: 24rpx;
+}
+/*# sourceMappingURL=./app.css.map */
