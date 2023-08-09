@@ -4,6 +4,8 @@ import Taro from '@tarojs/taro'
 import './index.less'
 import UserStore from '@/store/user.store';
 import { Store } from '@/store/core.store'
+import { AtAvatar } from 'taro-ui'
+
 export default class Index extends Component<PropsWithChildren> {
   state = {
     carList: [
@@ -63,12 +65,16 @@ export default class Index extends Component<PropsWithChildren> {
           </View>
           <View className='at-icon at-icon-bullet-list font-size-16 gray-text-500'></View>
         </View>
-        <View className='at-row at-row--wrap'>
-          <View className='at-col at-col-4'>A</View>
-          <View className='at-col at-col-4'>B</View>
-          <View className='at-col at-col-4'>C</View>
-          <View className='at-col at-col-4'>D</View>
-          <View className='at-col at-col-4'>E</View>
+        <View className=''>
+          {
+            this.state.carList.map((item) => {
+              return (
+                <View className='card m-flex'>
+                  <AtAvatar image={item.cover}></AtAvatar>
+                </View>
+              )
+            })
+          }
         </View>
       </View>
     )
