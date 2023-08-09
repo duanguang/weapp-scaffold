@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro'
 import './index.less'
 import UserStore from '@/store/user.store';
 import { Store } from '@/store/core.store'
-import { AtAvatar } from 'taro-ui'
+import { AtAvatar, AtTag } from 'taro-ui'
 
 export default class Index extends Component<PropsWithChildren> {
   state = {
@@ -54,23 +54,40 @@ export default class Index extends Component<PropsWithChildren> {
     console.dir(store)
     return (
       <View className='index page'>
-        <View className='m-flex items-center'>
-          <View className='at-icon at-icon-map-pin gray-text-400 font-size-13'></View>
-          <View className='at-col at-col-5 gray-text-400 font-size-12'>锐丰广场</View>
+        <View className='m-flex items-center white-text bg-theme p6'>
+          <View className='at-icon at-icon-map-pin font-size-13'></View>
+          <View className='at-col at-col-5 font-size-12'>锐丰广场</View>
         </View>
-        <View className='m-flex justify-between mt-6'>
+        <View className='m-flex justify-between mt-6 px-6'>
           <View className='m-flex items-center'>
             <View className='font-size-15'>设备列表</View>
             <View className='font-size-12 gray-text-400'>/5</View>
           </View>
-          <View className='at-icon at-icon-bullet-list font-size-16 gray-text-500'></View>
+          <View className='at-icon at-icon-bullet-list font-size-18 gray-text-500'></View>
         </View>
-        <View className=''>
+        <View className='px-6'>
           {
             this.state.carList.map((item) => {
               return (
-                <View className='card m-flex'>
-                  <AtAvatar image={item.cover}></AtAvatar>
+                <View className='card m-flex mt-8 items-center'>
+
+                  <AtAvatar size="large" image={item.cover}></AtAvatar>
+                  <View className='ml-8 flex-1'>
+                    <View className='font-size-16'>{item.name}</View>
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.carNum}
+                        type='primary'
+                        circle
+                      >
+                        编号：{item.carNum}
+                      </AtTag>
+                    </View>
+                  </View>
+                  <View className={`status ${item.online ? 'online': 'offline'} m-flex items-center justify-center`}>
+                    <View className={`at-icon at-icon-${item.online ? 'check' : 'close'} font-size-13 white-text`}></View>
+                  </View>
                 </View>
               )
             })

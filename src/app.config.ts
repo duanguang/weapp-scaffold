@@ -3,6 +3,7 @@ export default defineAppConfig({
   pages: [
     'pages/index/index',
     'pages/login/index',
+    'pages/cars/index',
   ],
   subpackages: [
     {
@@ -25,7 +26,7 @@ export default defineAppConfig({
     navigationBarTextStyle: 'white'
   },
   tabBar: {
-    // custom: true,
+    custom: true,
     color: '#777777',
     selectedColor: '#fc690a',
     backgroundColor: '#ffffff',
@@ -38,7 +39,7 @@ export default defineAppConfig({
         text: '设备'
       },
       {
-        pagePath: 'pages/index/index',
+        pagePath: 'pages/cars/index',
         iconPath: './assets/image/user.png',
         selectedIconPath: './assets/image/user-select.png',
         text: '我的'

@@ -1,8 +1,15 @@
-.bottom-tab {
+.bottom-tab-wrap {
   position: fixed;
   display: flex;
   width: 100%;
+  height: 64PX;
+  bottom: 0;
+}
+.bottom-tab {
+  margin-top: 15PX;
+  display: flex;
   height: 49PX;
+  width: 100%;
   background: white;
   box-shadow: 0PX -5PX 10PX 0PX rgba(0, 0, 0, 0.03);
   bottom: 0;
@@ -25,5 +32,33 @@
   font-family: PingFangSC-Light, PingFang SC;
   font-weight: 300;
   color: #444444;
+}
+.bottom-tab .scan-wrap {
+  height: 60PX;
+  width: 60PX;
+  border-radius: 100%;
+  background-color: #ffffff;
+  box-shadow: 0PX -5PX 10PX 0PX rgba(0, 0, 0, 0.03);
+  left: 50%;
+  top: -15PX;
+  transform: translateX(-50%);
+  position: absolute;
+  padding: 3PX;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bottom-tab .scan-wrap-box {
+  height: 52PX;
+  width: 52PX;
+  border-radius: 100%;
+  background-color: #fc690a;
+}
+.bottom-tab .scan-wrap-box:active {
+  opacity: 0.8;
+}
+.bottom-tab .scan-img {
+  width: 40PX;
+  height: 40PX;
 }
 /*# sourceMappingURL=./index.css.map */

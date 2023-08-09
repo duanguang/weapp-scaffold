@@ -1,1 +1,12 @@
+.status {
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 100%;
+}
+.status.online {
+  background-color: aquamarine;
+}
+.status.offline {
+  background-color: #ddd;
+}
 /*# sourceMappingURL=./index.css.map */
