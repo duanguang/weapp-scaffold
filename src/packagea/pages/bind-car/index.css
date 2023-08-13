@@ -1,0 +1,14 @@
+.right-arrow {
+  right: 12px;
+  top: 30rpx;
+}
+.image-label {
+  width: 152rpx;
+}
+.bottom-wrap {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  bottom: 0;
+}
+/*# sourceMappingURL=./index.css.map */

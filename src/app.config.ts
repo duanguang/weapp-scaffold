@@ -9,7 +9,9 @@ export default defineAppConfig({
     {
       "root": "packagea",
       "pages": [
-        "pages/dog/index"
+        "pages/dog/index",
+        "pages/car-detail/index",
+        "pages/bind-car/index",
       ]
     }, {
       "root": "packageb",

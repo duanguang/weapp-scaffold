@@ -1,10 +1,15 @@
+.search-wrap {
+  height: 56rpx;
+  border: 1rpx solid #ffffff;
+  border-radius: 56rpx;
+}
 .status {
   height: 40rpx;
   width: 40rpx;
   border-radius: 100%;
 }
 .status.online {
-  background-color: aquamarine;
+  background-color: #71cc34;
 }
 .status.offline {
   background-color: #ddd;

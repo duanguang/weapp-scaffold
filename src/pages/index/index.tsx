@@ -1,7 +1,8 @@
 import { Component,PropsWithChildren } from 'react'
-import { View } from '@tarojs/components'
+import { View, Navigator } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import './index.less'
+import '../../app.less'
 import UserStore from '@/store/user.store';
 import { Store } from '@/store/core.store'
 import { AtAvatar, AtTag } from 'taro-ui'
@@ -30,6 +31,13 @@ export default class Index extends Component<PropsWithChildren> {
     ]
   }
 
+  gotoDetail (item) {
+    console.log(item)
+    Taro.navigateTo({
+      url: '/pages/car-detail/index',
+    })
+  }
+
   componentWillMount() { }
 
   componentDidMount() {
@@ -55,40 +63,46 @@ export default class Index extends Component<PropsWithChildren> {
     return (
       <View className='index page'>
         <View className='m-flex items-center white-text bg-theme p6'>
-          <View className='at-icon at-icon-map-pin font-size-13'></View>
-          <View className='at-col at-col-5 font-size-12'>锐丰广场</View>
+          <View className='font-size-13 pr-3'>锐丰广场</View>
+          <View className='at-icon at-icon-chevron-down font-size-13'></View>
+          <View className='search-wrap bg-white flex-1 ml-5 at-row at-row__justify--end at-row__align--center'>
+              <View className='bg-theme small-btn white-text font-size-12 px-6 mx-3'>搜索</View>
+          </View>
         </View>
-        <View className='m-flex justify-between mt-6 px-6'>
+        <View className='m-flex justify-between mt-6 px-6 items-center'>
           <View className='m-flex items-center'>
             <View className='font-size-15'>设备列表</View>
             <View className='font-size-12 gray-text-400'>/5</View>
           </View>
-          <View className='at-icon at-icon-bullet-list font-size-18 gray-text-500'></View>
+          <View className='at-icon at-icon-bullet-list font-size-20 gray-text-500'></View>
         </View>
         <View className='px-6'>
           {
             this.state.carList.map((item) => {
               return (
-                <View className='card m-flex mt-8 items-center'>
-
-                  <AtAvatar size="large" image={item.cover}></AtAvatar>
-                  <View className='ml-8 flex-1'>
-                    <View className='font-size-16'>{item.name}</View>
-                    <View className='mt-5'>
-                      <AtTag
-                        size='small'
-                        name={item.carNum}
-                        type='primary'
-                        circle
-                      >
-                        编号：{item.carNum}
-                      </AtTag>
+                <Navigator url='/packagea/pages/car-detail/index' hoverClass='navigator-hover'>
+                  <View
+                    className='card m-flex mt-8 items-center'
+                  >
+                    <AtAvatar size="large" image={item.cover}></AtAvatar>
+                    <View className='ml-8 flex-1'>
+                      <View className='font-size-16'>{item.name}</View>
+                      <View className='mt-5'>
+                        <AtTag
+                          size='small'
+                          name={item.carNum}
+                          type='primary'
+                          circle
+                        >
+                          编号：{item.carNum}
+                        </AtTag>
+                      </View>
+                    </View>
+                    <View className={`status ${item.online ? 'online': 'offline'} m-flex items-center justify-center`}>
+                      <View className={`at-icon at-icon-${item.online ? 'check' : 'close'} font-size-13 white-text`}></View>
                     </View>
                   </View>
-                  <View className={`status ${item.online ? 'online': 'offline'} m-flex items-center justify-center`}>
-                    <View className={`at-icon at-icon-${item.online ? 'check' : 'close'} font-size-13 white-text`}></View>
-                  </View>
-                </View>
+                </Navigator>
               )
             })
           }

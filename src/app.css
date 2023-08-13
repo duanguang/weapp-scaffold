@@ -2,6 +2,9 @@ page {
   height: 100%;
   background: #f5f5f5;
 }
+view {
+  box-sizing: border-box;
+}
 .page {
   background: #f5f5f5;
 }
@@ -34,6 +37,15 @@ page {
 .justify-between {
   justify-content: space-between;
 }
+.lh-15 {
+  line-height: 1.5;
+}
+.gray-text-700 {
+  color: #333;
+}
+.gray-text-600 {
+  color: #555;
+}
 .gray-text-500 {
   color: #777;
 }
@@ -64,6 +76,9 @@ page {
 .font-size-16 {
   font-size: 32rpx;
 }
+.font-size-20 {
+  font-size: 40rpx;
+}
 .mt-6 {
   margin-top: 12rpx;
 }
@@ -78,6 +93,9 @@ page {
 }
 .mx-5 {
   margin: 0 10rpx;
+}
+.mx-3 {
+  margin: 0 6rpx;
 }
 .ml-5 {
   margin-left: 10rpx;
@@ -100,13 +118,53 @@ page {
 .ml-10 {
   margin-left: 20rpx;
 }
+.px-3 {
+  padding: 0 6rpx;
+}
+.px-r {
+  padding-right: 6rpx;
+}
+.px-4 {
+  padding: 0 8rpx;
+}
+.px-5 {
+  padding: 0 10rpx;
+}
 .px-6 {
   padding: 0 12rpx;
+}
+.px-8 {
+  padding: 0 16rpx;
+}
+.px-10 {
+  padding: 0 20rpx;
+}
+.px-12 {
+  padding: 0 24rpx;
+}
+.px-13 {
+  padding: 0 26rpx;
 }
 .p6 {
   padding: 12rpx;
 }
+.p-13 {
+  padding: 26rpx;
+}
+.h40 {
+  height: 80rpx;
+}
+.bg-white {
+  background-color: #ffffff;
+}
 .bg-theme {
   background-color: #fc690a;
+}
+.small-btn {
+  height: 40rpx;
+  border-radius: 40rpx;
+}
+.at-image-picker__flex-box {
+  flex-direction: row-reverse;
 }
 /*# sourceMappingURL=./app.css.map */

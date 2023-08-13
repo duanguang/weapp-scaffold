@@ -38,14 +38,18 @@ export default class CustomTabBar extends Component{
   }
 
   scanCode = () => {
-    Taro.scanCode({
-      fail: (err) => {
-        console.log(err)
-      },
-      success: (res) => {
-        console.log(res)
-      }
+    // 跳转到目的页面，打开新页面
+    Taro.navigateTo({
+      url: '/packagea/pages/bind-car/index',
     })
+    // Taro.scanCode({
+    //   fail: (err) => {
+    //     console.log(err)
+    //   },
+    //   success: (res) => {
+    //     console.log(res)
+    //   }
+    // })
   }
 
   tabItem = (item, index) => {
