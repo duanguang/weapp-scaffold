@@ -6,6 +6,8 @@ import Taro from '@tarojs/taro';
 import { bind,observer } from '@/store/core.store';
 import UserStore from '@/store/user.store';
 import * as api from '@/api/index'
+import * as path from '@/constants/route.config'
+
 const baseCls = `legions-login`;
 interface IProps{
     store:UserStore
@@ -43,7 +45,7 @@ export default class Index extends Component<PropsWithChildren&IProps> {
         this.props.store.setFreshToken(res.data.refreshToken)
         setTimeout(() => {
           Taro.switchTab({
-            url:'/pages/index/index'
+            url: path.HOME
           })
         }, 1000)
       }).catch(err => {

@@ -10,7 +10,6 @@ import * as api from '@/api/index'
 import * as path from '@/constants/route.config'
 import { Store } from '@/store/core.store'
 // import '../../../app.less'
-import PlaceStore from '@/store/place.store';
 
 function BindCarDetail (props) {
   const deviceTypes = ['游乐车', '游乐船'],

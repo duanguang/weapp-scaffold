@@ -58,6 +58,10 @@ export default class Index extends Component<PropsWithChildren> {
   componentWillUnmount() { }
 
   componentDidShow() {
+    // 页面 onShow 时
+    const pageObj = Taro.getCurrentInstance().page
+    const tabbar = Taro.getTabBar(pageObj)
+    console.log(tabbar)
 
     try {
       var value = Taro.getStorageSync('token')
@@ -78,9 +82,6 @@ export default class Index extends Component<PropsWithChildren> {
         return
       }
     }
-        // 页面 onShow 时
-    const pageObj = Taro.getCurrentInstance().page
-    Taro.getTabBar(pageObj)
   }
 
   componentDidHide() { }

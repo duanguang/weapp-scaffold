@@ -1,6 +1,5 @@
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
-import * as path from '@/constants/route.config'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
 const REFETCH_CODE = 800

@@ -3,7 +3,7 @@ import {  AtList, AtListItem, AtAvatar, AtButton } from 'taro-ui'
 import {  View, Text } from '@tarojs/components'
 import { useState, useEffect} from 'react';
 import './index.less'
-import {DeviceType, Device, Place} from '@/constants/const.type'
+import {Device} from '@/constants/const.type'
 import * as api from '@/api/index'
 
 interface Data extends Device {

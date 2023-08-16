@@ -30,7 +30,8 @@ export default class CustomTabBar extends Component{
     ]
   }
 
-  switchTab = (item) => {
+  switchTab = (item, index) => {
+      this.setState({selected: index})
       const url = '/' + item.pagePath
       Taro.switchTab({
           url: url
@@ -54,12 +55,12 @@ export default class CustomTabBar extends Component{
   }
 
   tabItem = (item, index) => {
-    return <CoverView className='bottom-tab-item' onClick={this.switchTab.bind(this, item)} data-path={item.pagePath} key={item.text}>
-                    <CoverImage className='bottom-tab-item-img' src={this.state.selected === index ? item.selectedIconPath : item.iconPath} />
-                    <CoverView className='bottom-tab-item-text' style={{ color: this.state.selected === index ? this.state.selectedColor : this.state.color }}>
-                        {item.text}
-                    </CoverView>
-                </CoverView>
+    return <CoverView className='bottom-tab-item' onClick={this.switchTab.bind(this, item, index)} data-path={item.pagePath} key={item.text}>
+              <CoverImage className='bottom-tab-item-img' src={this.state.selected === index ? item.selectedIconPath : item.iconPath} />
+              <CoverView className='bottom-tab-item-text' style={{ color: this.state.selected === index ? this.state.selectedColor : this.state.color }}>
+                  {item.text} {this.state.selected}
+              </CoverView>
+          </CoverView>
   }
   componentWillMount() { }
 
