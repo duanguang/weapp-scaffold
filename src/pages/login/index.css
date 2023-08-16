@@ -1,0 +1,61 @@
+.legions-login {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #e6edfb;
+  overflow: hidden;
+  flex-direction: column;
+  display: flex;
+}
+.legions-login .login-bg {
+  background-image: url(../../assets/image/login-bg.png);
+  background-size: cover;
+  height: 330rpx;
+}
+.legions-login .login-content-wrap {
+  padding: 24rpx;
+}
+.legions-login .login-content {
+  border-radius: 24rpx;
+  padding: 48rpx;
+  margin-top: -60rpx;
+  box-shadow: 0 -12rpx 5rpx 3rpx rgba(0, 0, 0, 0.05);
+}
+.legions-login .login-item {
+  width: 86%;
+  margin: 30rpx auto;
+}
+.legions-login .desc {
+  padding-top: 168px;
+  padding-left: 100px;
+  height: 551px;
+}
+.legions-login .submit {
+  height: 88rpx;
+  margin-top: 100rpx;
+}
+.legions-login .submit button {
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #fc690a;
+  border-radius: 12rpx;
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #FFFFFF;
+}
+.legions-login .text {
+  height: 54px;
+  font-size: 39px;
+  padding-top: 101px;
+  padding-left: 180px;
+  padding-right: 180px;
+  width: 390px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #2D2E2E;
+  line-height: 54px;
+  text-align: center;
+  white-space: nowrap;
+}
+/*# sourceMappingURL=./index.css.map */

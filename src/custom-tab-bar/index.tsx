@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Component } from 'react'
-import { CoverView, CoverImage, View } from '@tarojs/components'
+import { CoverView, CoverImage } from '@tarojs/components'
 import './index.css'
 import '../app.css'
 
@@ -9,7 +9,7 @@ export default class CustomTabBar extends Component{
     selected: 0,
     color: '#777777',
     selectedColor: '#fc690a',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fc690a',
     borderStyle: 'white',
     list: [
       {
@@ -38,18 +38,19 @@ export default class CustomTabBar extends Component{
   }
 
   scanCode = () => {
+    console.log('sm')
     // 跳转到目的页面，打开新页面
-    Taro.navigateTo({
-      url: '/packagea/pages/bind-car/index',
+    Taro.scanCode({
+      fail: (err) => {
+        console.log(err)
+      },
+      success: (res) => {
+        console.log(res.path)
+        Taro.navigateTo({
+          url: `/${res.path}`,
+        })
+      }
     })
-    // Taro.scanCode({
-    //   fail: (err) => {
-    //     console.log(err)
-    //   },
-    //   success: (res) => {
-    //     console.log(res)
-    //   }
-    // })
   }
 
   tabItem = (item, index) => {
@@ -79,28 +80,29 @@ export default class CustomTabBar extends Component{
 
     return (
       <CoverView className='bottom-tab-wrap'>
-        <View className='bottom-tab'>
+        <CoverView className='bottom-tab'>
           {
               this.tabItem(this.state.list[0], 0)
           }
           {
             (
-              <View className='bottom-tab-item pr'>
-                <CoverView
-                  className="scan-wrap pa m-flex justify-center items-center"
-                  onClick={this.scanCode.bind(this)}
-                >
-                  <CoverView className='scan-wrap-box m-flex justify-center items-center'>
-                     <CoverImage className='scan-img' src='../assets/image/car-scan.png' />
-                  </CoverView>
-                </CoverView>
-              </View>
+              <CoverView className='bottom-tab-item pr'>
+
+              </CoverView>
             )
           }
           {
               this.tabItem(this.state.list[2], 2)
           }
-        </View>
+        </CoverView>
+        <CoverView
+          className="scan-wrap m-flex justify-center items-center"
+          onClick={this.scanCode.bind(this)}
+        >
+          <CoverView className='scan-wrap-box m-flex justify-center items-center'>
+              <CoverImage className='scan-img' src='../assets/image/car-scan.png' />
+          </CoverView>
+        </CoverView>
     </CoverView>
     )
   }

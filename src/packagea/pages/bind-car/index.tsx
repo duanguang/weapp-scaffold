@@ -1,80 +1,101 @@
 // import  React from 'react';
+import Taro from '@tarojs/taro'
 import {  AtList, AtListItem, AtForm, AtInput, AtImagePicker, AtButton } from 'taro-ui'
 import {  View, Text, Picker } from '@tarojs/components'
 import { useState, useEffect} from 'react';
 import './index.less'
-import '../../../app.less'
+import {DeviceType, Device, Place} from '@/constants/const.type'
+import { AtMessage } from 'taro-ui'
+import * as api from '@/api/index'
+import * as path from '@/constants/route.config'
+import { Store } from '@/store/core.store'
+// import '../../../app.less'
+import PlaceStore from '@/store/place.store';
 
-
-type DeviceType = 0 | 1
-type Data = {
-  name: string,
-  placeId: string,
-  msId: string,
-  type: DeviceType,
-  code: string
-}
-
-function CarDetail () {
+function BindCarDetail (props) {
   const deviceTypes = ['游乐车', '游乐船'],
-  [places] = useState([
-    {id: 'new', name: '新建'},
-    {id: '0',name: '锐丰广场'},
-    {id: '1',name: '敏捷广场'},
-    {id: '2',name: '御溪谷'},
-  ]),
+  [places, setPlaces] = useState([
+    {addressCode: '0', addressName: '新建'},
+    {addressCode: 'A1000009', addressName: '锐丰广场'}
+  ] as Array<Place>),
   [deviceData, setDeviceData] = useState({
-    name: '',
-    code: '',
-    msId: '23008978',
-    placeId: '',
-    type: 0,
-  } as Data),
+    nickname: '超级飞侠乐迪',
+    bindSort: 0,
+    deviceCode: '',
+    siteAreaCode: '',
+    deviceType: 0,
+  } as Device),
   [files, setFiles] = useState([]),
   [placeName, setPlacName] = useState(''),
   [placeValue, setPlacValue] = useState(1),
   [deviceTypeName, setDeviceTypeName] = useState('游乐车')
 
   useEffect(() => {
+    if (props && props.tid) {
+      let deviceCode = props.tid.split('=')[1] as string
+      deviceCode = deviceCode.split('&')[0]
+      setDeviceData({...deviceData, deviceCode} as Device)
+    }
 
-  },[deviceData])
+    // const store = Store.getStore(PlaceStore)
+    // const places = store.places
+
+    // console.log(places)
+
+    // setPlaces([{addressCode: '0', addressName: '新建'}].concat(places))
+  },[props.tid, Store])
 
   const onPlaceChange = (e) => {
     const value = parseInt(e && e.detail.value) || 0
-    console.log(value)
     setPlacValue(value)
     if (value) {
       const place = places[value]
-      setDeviceData({...deviceData, placeId: place.id})
-      setPlacName(place && place.name || '')
+      setDeviceData({...deviceData, siteAreaCode: place.addressCode})
+      setPlacName(place && place.addressName || '')
     } else {
       // 还没有场地
     }
   }
 
   const onDeviceTypeChange = (e) => {
-    const type = (parseInt(e && e.detail.value) || 0) as DeviceType
-    setDeviceData({...deviceData, type})
-    setDeviceTypeName(deviceTypes[type])
+    const deviceType = (parseInt(e && e.detail.value) || 0) as DeviceType
+    setDeviceData({...deviceData, deviceType})
+    setDeviceTypeName(deviceTypes[deviceType])
   }
 
   const handleNameChange = (e) => {
-    setDeviceData({...deviceData, name: e})
+    setDeviceData({...deviceData, nickname: e})
   }
   const handleCodeChange = (e) => {
-    setDeviceData({...deviceData, code: e})
+    setDeviceData({...deviceData, bindSort: parseInt(e)})
+  }
+
+  const onSubmit = async () => {
+    // Taro.atMessage({
+    //   'message': '消息通知',
+    //   'type': 'error',
+    // })
+   const res = await api.bindDevice(deviceData)
+   if (res && res.code === '0000') {
+    Taro.navigateTo({
+      url: path.HOME
+    })
+   }
+
   }
 
   return (
     <View>
-      <AtForm>
+      <AtMessage />
+      <AtForm
+      >
         <View className='p-13 at-row at-row__justify--between at-row__align--center'>
-          <Text className='font-size-16 gray-text-700'>设备唯一码</Text>
-          <Text className='font-size-15 gray-text-500'>{deviceData.msId}</Text>
+          <Text className='font-size-16 gray-text-700'>设备编码</Text>
+          <Text className='font-size-15 gray-text-500'>{deviceData.deviceCode}</Text>
         </View>
         <View className='page-section m-flex items-center pr'>
             <View className='flex-1'>
-              <Picker mode='selector' value={placeValue}  rangeKey='name' range={places} onChange={onPlaceChange}>
+              <Picker mode='selector' value={placeValue}  rangeKey='addressName' range={places} onChange={onPlaceChange}>
                 <AtList>
                   <AtListItem
                     title='选择场所'
@@ -87,7 +108,7 @@ function CarDetail () {
           </View>
         <View className='page-section m-flex items-center pr'>
             <View className='flex-1'>
-              <Picker mode='selector' value={deviceData.type}  range={deviceTypes} onChange={onDeviceTypeChange}>
+              <Picker mode='selector' value={deviceData.deviceType}  range={deviceTypes} onChange={onDeviceTypeChange}>
                 <AtList>
                   <AtListItem
                     title='选择设备'
@@ -101,22 +122,22 @@ function CarDetail () {
           <View>
             <AtInput
               clear
-              name='name'
+              name='nickname'
               title='名称'
               type='text'
               placeholder='设备名称'
-              value={deviceData.name}
+              value={deviceData.nickname}
               onChange={handleNameChange}
             />
           </View>
           <View>
             <AtInput
               clear
-              name='code'
-              title='编码'
+              name='bindSort'
+              title='编号'
               type='text'
-              placeholder='设备编码'
-              value={deviceData.code}
+              placeholder='设备编号'
+              value={deviceData.bindSort}
               onChange={handleCodeChange}
             />
           </View>
@@ -132,11 +153,15 @@ function CarDetail () {
             </View>
           </View>
           <View className='p-13 bottom-wrap'>
-            <AtButton className='flex-1' type='primary'>绑定设备</AtButton>
+            <AtButton
+              className='flex-1'
+              type='primary'
+              onClick={onSubmit}
+            >绑定设备</AtButton>
           </View>
       </AtForm>
     </View>
   )
 }
 
-export default CarDetail
+export default BindCarDetail

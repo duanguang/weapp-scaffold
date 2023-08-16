@@ -8,28 +8,42 @@
     overflow: hidden;
     flex-direction: column;
     display: flex;
+    .login-bg {
+      background-image: url(../../assets/image/login-bg.png);
+      background-size: cover;
+      height: 330rpx;
+    }
+    .login-content-wrap{
+      padding: 24rpx;
+    }
+    .login-content {
+      border-radius: 24rpx;
+      padding: 48rpx;
+      margin-top: -60rpx;
+      box-shadow: 0 -12rpx 5rpx 3rpx rgba(0, 0, 0, .05);
+    }
+    .login-item{
+      width: 86%;
+      margin: 30rpx auto;
+    }
     .desc{
       padding-top: 168px;
       padding-left: 100px;
       height: 551px;
-      .img{
-        width: 550px;
-        height: 551px;
-      }
     }
     .submit{
-        width: 550px;
-        height: 100px;
-        margin-left: 100px;
-        margin-top: 135px;
+        height: 88rpx;
+        margin-top: 100rpx;
         button{
-            background: #0E8FE9;
-            border-radius: 50px;
-            font-size: 32px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #FFFFFF;
-        }
+          height: 88rpx;
+          line-height: 88rpx;
+          background: #fc690a;
+          border-radius: 12rpx;
+          font-size: 32px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #FFFFFF;
+      }
     }
     .text{
         height: 54px;

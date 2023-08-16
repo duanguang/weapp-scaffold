@@ -13,11 +13,13 @@
   width: 100%;
   background: #ffffff;
   box-shadow: 0PX -5PX 10PX 0PX rgba(0, 0, 0, 0.03);
+  overflow: auto !important;
   &-item {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: visible;
     &-img {
       margin: 5PX auto 0;
       width: 24PX;
@@ -32,32 +34,32 @@
       color: rgba(68, 68, 68, 1);
     }
   }
-  .scan-wrap{
-    height: 66PX;
-    width: 66PX;
+}
+.scan-wrap{
+  height: 66PX;
+  width: 66PX;
+  border-radius: 100%;
+  background-color: #ffffff;
+  box-shadow: 0PX -5PX 10PX 0PX rgba(0, 0, 0, 0.03);
+  left: 50%;
+  bottom: 0PX;
+  transform: translateX(-50%);
+  position: fixed;
+  padding: 3PX;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &-box{
+    height: 58PX;
+    width: 58PX;
     border-radius: 100%;
-    background-color: #ffffff;
-    box-shadow: 0PX -5PX 10PX 0PX rgba(0, 0, 0, 0.03);
-    left: 50%;
-    top: -21PX;
-    transform: translateX(-50%);
-    position: absolute;
-    padding: 3PX;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    &-box{
-      height: 58PX;
-      width: 58PX;
-      border-radius: 100%;
-      background-color: #fc690a;
-      &:active{
-        opacity: .8;
-      }
+    background-color: #fc690a;
+    &:active{
+      opacity: .8;
     }
   }
-  .scan-img{
-    width: 40PX;
-    height: 40PX;
-  }
+}
+.scan-img{
+  width: 40PX;
+  height: 40PX;
 }

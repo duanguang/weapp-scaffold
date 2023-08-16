@@ -10,4 +10,12 @@ export default class UserStore extends Store{
     @action setName(name:string) {
         this.name = name;
     }
+    @observable token=''
+    @action setToken(token:string) {
+        this.token = token;
+    }
+    @observable freshToken = ''
+    @action setFreshToken(token:string) {
+      this.freshToken = token;
+    }
 }

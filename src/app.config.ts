@@ -4,6 +4,7 @@ export default defineAppConfig({
     'pages/index/index',
     'pages/login/index',
     'pages/cars/index',
+    'pages/scan/index',
   ],
   subpackages: [
     {
@@ -24,14 +25,14 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fc690a',
-    navigationBarTitleText: '福美乐',
+    navigationBarTitleText: '福乐多',
     navigationBarTextStyle: 'white'
   },
   tabBar: {
     custom: true,
     color: '#777777',
     selectedColor: '#fc690a',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fc690a',
     borderStyle: 'white',
     list: [
       {

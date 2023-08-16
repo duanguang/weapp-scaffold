@@ -6,7 +6,16 @@ import '../../app.less'
 import UserStore from '@/store/user.store';
 import { Store } from '@/store/core.store'
 import { AtAvatar, AtTag } from 'taro-ui'
+import * as api from '@/api/index'
+import DropList from '@/components/base/drop-list'
+import { bind,observer } from '@/store/core.store';
+import PlaceStore from '@/store/place.store';
+import * as path from '@/constants/route.config'
 
+
+@bind({ store: UserStore })
+@bind({ store: PlaceStore })
+@observer
 export default class Index extends Component<PropsWithChildren> {
   state = {
     carList: [
@@ -31,22 +40,44 @@ export default class Index extends Component<PropsWithChildren> {
     ]
   }
 
-  gotoDetail (item) {
-    console.log(item)
-    Taro.navigateTo({
-      url: '/pages/car-detail/index',
+  getWechatToken () {
+    api.getWechatToken()
+    .then(res => {
+      api.getwxacodeunlimit({token: res.data.accessToken as string, sence: 'deviceCode_865328068118396'})
     })
   }
 
-  componentWillMount() { }
-
   componentDidMount() {
-
+    // api.createPlace()
+    api.getPlaces().then(res => {
+      console.log(res)
+      if (res.data.code === '0000') this.props.store.setPlaces(res.data.data)
+    })
   }
 
   componentWillUnmount() { }
 
   componentDidShow() {
+
+    try {
+      var value = Taro.getStorageSync('token')
+      if (!value) {
+        // Do something with return value
+        Taro.navigateTo({
+          url: path.LOGIN,
+        })
+        return
+      }
+    } catch (e) {
+      const store = Store.getStore(UserStore)
+      // Do something when catch error
+      if (!store.token) {
+        Taro.navigateTo({
+          url: path.LOGIN,
+        })
+        return
+      }
+    }
         // 页面 onShow 时
     const pageObj = Taro.getCurrentInstance().page
     Taro.getTabBar(pageObj)
@@ -62,6 +93,7 @@ export default class Index extends Component<PropsWithChildren> {
     console.dir(store)
     return (
       <View className='index page'>
+        <DropList/>
         <View className='m-flex items-center white-text bg-theme p6'>
           <View className='font-size-13 pr-3'>锐丰广场</View>
           <View className='at-icon at-icon-chevron-down font-size-13'></View>
@@ -74,7 +106,11 @@ export default class Index extends Component<PropsWithChildren> {
             <View className='font-size-15'>设备列表</View>
             <View className='font-size-12 gray-text-400'>/5</View>
           </View>
-          <View className='at-icon at-icon-bullet-list font-size-20 gray-text-500'></View>
+          <View
+            className='at-icon at-icon-bullet-list font-size-20 gray-text-500'
+            onClick={this.getWechatToken}
+          >
+           </View>
         </View>
         <View className='px-6'>
           {

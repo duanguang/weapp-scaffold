@@ -1,0 +1,10 @@
+.drop-list-wrap {
+  min-height: 200rpx;
+  max-height: 400rpx;
+  position: fixed;
+  left: 0;
+  top: 70rpx;
+  box-shadow: 0 6rpx 5rpx 4rpx rgba(0, 0, 0, 0.07);
+  display: none;
+}
+/*# sourceMappingURL=./index.css.map */
