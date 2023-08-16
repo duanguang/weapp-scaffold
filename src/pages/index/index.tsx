@@ -1,4 +1,4 @@
-import { Component,PropsWithChildren } from 'react'
+import { Component } from 'react'
 import { View, Navigator } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import './index.less'
@@ -12,11 +12,13 @@ import { bind,observer } from '@/store/core.store';
 import PlaceStore from '@/store/place.store';
 import * as path from '@/constants/route.config'
 
-
-@bind({ store: UserStore })
-@bind({ store: PlaceStore })
+interface IProps{
+  store: UserStore;
+  placeStore: PlaceStore;
+}
+@bind({ store: UserStore,placeStore:PlaceStore })
 @observer
-export default class Index extends Component<PropsWithChildren> {
+export default class Index extends Component<IProps> {
   state = {
     carList: [
       {
@@ -48,10 +50,8 @@ export default class Index extends Component<PropsWithChildren> {
   }
 
   componentDidMount() {
-    // api.createPlace()
     api.getPlaces().then(res => {
-      console.log(res)
-      if (res.data.code === '0000') this.props.store.setPlaces(res.data.data)
+      if (res.data.code === '0000') this.props.placeStore.setPlaces(res.data.data)
     })
   }
 

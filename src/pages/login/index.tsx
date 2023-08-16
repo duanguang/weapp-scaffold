@@ -97,7 +97,6 @@ export default class Index extends Component<PropsWithChildren&IProps> {
                     </View>
                     <View className='submit bg-theme login-item'>
                       <Button onClick={() => {
-                        // this.props.store.setName('xiaowang')
                         // Taro.navigateTo({
                         //     url:'/pages/index/index'
                         // })

@@ -1,8 +1,8 @@
 {
   "miniprogramRoot": "./dist",
   "projectname": "taro-weapp-scaffold",
-  "description": "taro 小程序脚手架项目",
-  "appid": "wx8e23040a9d349b8b",
+  "description": "福乐多游乐",
+  "appid": "wx3da6f5fcfdf2f9aa",
   "setting": {
     "urlCheck": true,
     "es6": false,
