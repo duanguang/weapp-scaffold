@@ -8,8 +8,6 @@ import { Store } from '@/store/core.store'
 import { AtAvatar,AtTag } from 'taro-ui'
 import * as api from '@/api/index'
 import DropList from '@/components/base/drop-list'
-import * as path from '@/constants/route.config'
-import { DeviceData } from 'types/device'
 import { customTabBar } from '@/hooks/tabbar'
 import { observer } from '@/store/core.store';
 import DeviceStore from '@/store/device.store'
@@ -30,9 +28,8 @@ const statu = {
   3:'close'
 }
 const Index=observer(()=> {
-  const store = Store.getStore(UserStore)
   const device_store = Store.getStore(DeviceStore)
-  customTabBar(0)
+  customTabBar(0);
   const getWechatToken = () => {
     api.getWechatToken()
       .then(res => {
@@ -49,24 +46,6 @@ const Index=observer(()=> {
        }
     })
   },[])
-  useDidShow(() => {
-    try {
-      var value = Taro.getStorageSync('token')
-      if (!value) {
-        Taro.navigateTo({
-          url: path.LOGIN,
-        })
-        return
-      }
-    } catch (e) {
-      if (!store.token) {
-        Taro.navigateTo({
-          url: path.LOGIN,
-        })
-        return
-      }
-    }
-  })
   return (
     <View className='index page'>
       <DropList />

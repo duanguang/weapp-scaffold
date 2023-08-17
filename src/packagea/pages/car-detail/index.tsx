@@ -8,6 +8,8 @@ import { useLoad } from '@tarojs/taro';
 import { Store } from '@/store/core.store'
 import DeviceStore from '@/store/device.store';
 import { DeviceRecord } from 'types/device';
+import Taro from '@tarojs/taro';
+import { ROUTERS } from '@/routers';
 const statusObj = {
   0: {
     className: 'stop',
@@ -39,8 +41,45 @@ function CarDetail() {
       setDetail({ ...JSON.parse(params.detail) })
     }
   })
-  const handleStartDevice = () => {
-    api.startDevice(detail?.deviceCode)
+  const handleStartDevice =async () => {
+    if (detail.status === 0) {
+      const res = await api.deviceApi.start(detail?.deviceCode);
+      if (res?.data) {
+        Taro.showToast({
+          title: '启动成功',
+          icon: 'success',
+          duration: 2000,
+          success: () => {
+            Taro.redirectTo({url:ROUTERS.home})
+          }
+        })
+      } else {
+        Taro.showToast({
+          title: '启动失败',
+          icon: 'error',
+          duration: 2000
+        })
+      }
+    }
+    else if (detail.status === 1) {
+      const res = await api.deviceApi.stop(detail?.deviceCode);
+      if (res?.data) {
+        Taro.showToast({
+          title: '暂停成功',
+          icon: 'success',
+          duration: 2000,
+          success: () => {
+            Taro.redirectTo({url:ROUTERS.home})
+          }
+        })
+      } else {
+        Taro.showToast({
+          title: '暂停失败',
+          icon: 'error',
+          duration: 2000
+        })
+      }
+    }
   }
   return (
     <View>

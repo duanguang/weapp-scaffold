@@ -21,7 +21,7 @@ export default class CustomTabBar extends Component {
         iconPath: '../assets/image/car-scan.png',
       },
       {
-        pagePath: 'pages/cars/index',
+        pagePath: 'pages/member/index',
         text: '我的',
         selectedIconPath: '../assets/image/user-select.png',
         iconPath: '../assets/image/user.png',

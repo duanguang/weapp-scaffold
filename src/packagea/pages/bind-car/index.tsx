@@ -7,9 +7,9 @@ import './index.less'
 import { DeviceType,Device,Place } from '@/constants/const.type'
 import { AtMessage } from 'taro-ui'
 import * as api from '@/api/index'
-import * as path from '@/constants/route.config'
 import { Store } from '@/store/core.store'
 import { File } from 'taro-ui/types/image-picker';
+import { ROUTERS } from '@/routers';
 // import '../../../app.less'
 function BindCarDetail(props) {
   const deviceTypes = ['游乐车','游乐船'];
@@ -66,7 +66,7 @@ function BindCarDetail(props) {
     const res = await api.bindDevice(deviceData)
     if (res && res.code === '0000') {
       Taro.navigateTo({
-        url: path.HOME
+        url: ROUTERS.home
       })
     }
 

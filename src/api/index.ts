@@ -2,6 +2,7 @@ import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
 import { DeviceBindData, DeviceData } from 'types/device'
+import { UserData } from 'types/user'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
 const REFETCH_CODE = 800
@@ -23,7 +24,7 @@ export const login = async (data) => {
   }
 }
 
-export const refreshToken = async (token) => {
+export const refreshToken = async (token:string) => {
   const res = await taroFetch.request({method:'PUT', url: `${baseUrl}/login/refresh`, header: {'refresh-token': token}})
   if (res && res.statusCode == ERR_CODE) {
     return Promise.resolve(res.data)
@@ -48,8 +49,6 @@ export const getwxacodeunlimit = async (data: WxCode) => {
     data: {scene: sence, env_version: 'develop', page: 'pages/scan/index', check_path: false},
     url: `https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${token}`
   })
-
-  console.log(res)
 }
 
 export const createPlace = async() => {
@@ -72,7 +71,6 @@ export const getPlaces = async() => {
   const res = await taroFetch.request({
     url: `${baseUrl}site-area`
   })
-  console.log(res,'res')
   if (res && res.statusCode == ERR_CODE) {
     return Promise.resolve(res.data)
   } else if (res && res.statusCode == REFETCH_CODE) {
@@ -104,21 +102,6 @@ export const bindDevice = async (data:Device) => {
   }
 }
 
-export const startDevice = async (deviceCode:string) => {
-  const res = await taroFetch.request({
-    method: 'PUT',
-    data: {deviceCode},
-    url: `${baseUrl}device/start`
-  })
-
-  if (res && res.statusCode == ERR_CODE) {
-    return Promise.resolve(res.data)
-  } else if (res && res.statusCode == REFETCH_CODE) {
-    startDevice(deviceCode)
-  } else {
-    return Promise.reject(res.data && res.data.message || '操作失败')
-  }
-}
 
 class DeviceApi{
   async list(address_code?:string) {
@@ -127,7 +110,7 @@ class DeviceApi{
       data:{size:50,current:1},
       url: `${baseUrl}device/page`
     }).then((res) => {
-      if (Array.isArray(res.data?.data?.records)) {
+      if (Array.isArray(res?.data?.data?.records)) {
         const status = {
           0: '空闲',
           1: '运行',
@@ -143,8 +126,36 @@ class DeviceApi{
            item['bindStatusDesc']=bindStatus[item['bindStatus']]
         })
       }
-      return res.data as RootRespone<DeviceData>
+      return res?.data as RootRespone<DeviceData>
     })
+  }
+  async start(device_code:string) {
+    const res = await taroFetch.request({
+      method: 'PUT',
+      data: {deviceCode:device_code},
+      url: `${baseUrl}device/start`
+    })
+    return Promise.resolve(res.data as RootRespone<boolean>)
+  }
+  async stop(device_code:string) {
+    const res = await taroFetch.request({
+      method: 'PUT',
+      data: {deviceCode:device_code},
+      url: `${baseUrl}device/stop`
+    })
+    return Promise.resolve(res.data as RootRespone<boolean>)
   }
 }
 export const deviceApi = new DeviceApi()
+
+class UserApi{
+  async get() {
+    return await taroFetch.request({
+      method: 'GET',
+      url: `${baseUrl}/user-info`
+    }).then((res) => {
+      return res.data as RootRespone<UserData>
+    })
+  }
+}
+export const userApi = new UserApi()

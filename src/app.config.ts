@@ -3,7 +3,7 @@ export default defineAppConfig({
   pages: [
     'pages/index/index',
     'pages/login/index',
-    'pages/cars/index',
+    'pages/member/index',
     'pages/scan/index',
   ],
   subpackages: [
@@ -42,7 +42,7 @@ export default defineAppConfig({
         text: '设备'
       },
       {
-        pagePath: 'pages/cars/index',
+        pagePath: 'pages/member/index',
         iconPath: './assets/image/user.png',
         selectedIconPath: './assets/image/user-select.png',
         text: '我的'

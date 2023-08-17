@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 import invariant from "invariant"
 import { refreshToken } from './index';
+import { USER_ACCESS_TOKEN, USER_REFRESH_ACCESS_TOKEN } from '@/constants/storage.config';
 
 type Error = {
   code: string,
@@ -17,8 +18,8 @@ const handleTokenDisable = () => {
     icon: 'error',
     duration: 2000
   })
-  Taro.removeStorageSync('token')
-  Taro.removeStorageSync('refresh-token')
+  Taro.removeStorageSync(USER_ACCESS_TOKEN);
+  Taro.removeStorageSync(USER_REFRESH_ACCESS_TOKEN);
   setTimeout(() => {
     Taro.redirectTo({url: '/pages/login/index'})
   }, 2000)
@@ -36,17 +37,12 @@ const handleError = (err: Error) => {
 
 const interceptor = function (chain) {
   const requestParams = chain.requestParams
-  const { method, data, url } = requestParams
-
-  console.log(`http ${method || 'GET'} --> ${url} data: `, data)
-
+  // const { method, data, url } = requestParams
   return chain.proceed(requestParams)
     .then(async (res) => {
       if (res && res.data.code == '1002') {
         // 登录信息失效
-        console.log(`http <-- ${url} result:`, res)
-        const freshToken = Taro.getStorageSync('refresh-token')
-        console.log(freshToken)
+        const freshToken = Taro.getStorageSync(USER_REFRESH_ACCESS_TOKEN)
         if (!freshToken) {
           handleTokenDisable()
           return
@@ -54,14 +50,13 @@ const interceptor = function (chain) {
         let refreshData = await refreshToken(freshToken)
         if (refreshData.token) {
           Taro.setStorage({
-            key: 'token',
+            key: USER_ACCESS_TOKEN,
             data: refreshData.data.accessToken
           })
           Taro.setStorage({
-            key: 'refresh-token',
+            key: USER_REFRESH_ACCESS_TOKEN,
             data: refreshData.data.refreshToken
           })
-
           return {statusCode: 800}
         } else {
           handleTokenDisable()
@@ -81,7 +76,7 @@ const interceptor = function (chain) {
 
 export class TaroFetch {
     async request<T = any,U extends string | TaroGeneral.IAnyObject | ArrayBuffer = any | any>(options: Taro.request.Option<T,U>) {
-        const token = Taro.getStorageSync('token')
+        const token = Taro.getStorageSync(USER_ACCESS_TOKEN)
         options.header = Object.assign(DEFAULT_OPTION,options.header);
         console.log(options.url)
         if (token && !options.url.includes('login')) {
@@ -100,7 +95,7 @@ export class TaroFetch {
         invariant(options.url,'options.url: options.url should not a empty');
         return {
             'api-target': options.url,
-            'api-cookie': Taro.getStorageSync('token')
+            'api-cookie': Taro.getStorageSync(USER_ACCESS_TOKEN)
         }
     }
 }

@@ -6,7 +6,8 @@ import Taro from '@tarojs/taro';
 import { bind,observer } from '@/store/core.store';
 import UserStore from '@/store/user.store';
 import * as api from '@/api/index'
-import * as path from '@/constants/route.config'
+import { USER_ACCESS_TOKEN, USER_REFRESH_ACCESS_TOKEN } from '@/constants/storage.config';
+import { ROUTERS } from '@/routers';
 
 const baseCls = `legions-login`;
 interface IProps{
@@ -14,16 +15,13 @@ interface IProps{
 }
 @bind({ store: UserStore })
 @observer
-export default class Index extends Component<PropsWithChildren&IProps> {
+export default class Index extends Component<IProps> {
     state = {
       phone: '13838382438',
       pwd: '789234kliweo'
     }
-
     handleUserChange = () => {
-
     }
-
     handleLogin = () => {
       api.login({...this.state}).then(res => {
         Taro.showToast({
@@ -33,11 +31,11 @@ export default class Index extends Component<PropsWithChildren&IProps> {
         })
 
         Taro.setStorage({
-          key: 'token',
+          key: USER_ACCESS_TOKEN,
           data: res.data.accessToken
         })
         Taro.setStorage({
-          key: 'refresh-token',
+          key: USER_REFRESH_ACCESS_TOKEN,
           data: res.data.refreshToken
         })
 
@@ -45,7 +43,7 @@ export default class Index extends Component<PropsWithChildren&IProps> {
         this.props.store.setFreshToken(res.data.refreshToken)
         setTimeout(() => {
           Taro.switchTab({
-            url: path.HOME
+            url: ROUTERS.home
           })
         }, 1000)
       }).catch(err => {
@@ -57,17 +55,6 @@ export default class Index extends Component<PropsWithChildren&IProps> {
         })
       })
     }
-
-    componentWillMount() { }
-
-    componentDidMount() { }
-
-    componentWillUnmount() { }
-
-    componentDidShow() { }
-
-    componentDidHide() { }
-
     render() {
         return (
             <View className={baseCls}>
