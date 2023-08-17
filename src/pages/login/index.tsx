@@ -1,6 +1,6 @@
 import { Component,PropsWithChildren } from 'react'
 import { AtForm, AtInput, AtButton } from 'taro-ui'
-import { View,Text,Image,Button, Input } from '@tarojs/components'
+import { View,Button } from '@tarojs/components'
 import './index.less';
 import Taro from '@tarojs/taro';
 import { bind,observer } from '@/store/core.store';
@@ -73,14 +73,13 @@ export default class Index extends Component<PropsWithChildren&IProps> {
             <View className={baseCls}>
                 <View className='login-bg'></View>
                 <View className='login-content-wrap'>
-
                   <View className='login-content bg-white'>
                     <View className={`login-item`}>
                       <AtInput
                           name='user'
                           title='账号'
                           type='text'
-                          placeholder=''
+                          placeholder='账号'
                           value={this.state.phone}
                           onChange={this.handleUserChange.bind(this)}
                         />
@@ -97,12 +96,10 @@ export default class Index extends Component<PropsWithChildren&IProps> {
                     </View>
                     <View className='submit bg-theme login-item'>
                       <Button onClick={() => {
-                        // Taro.navigateTo({
-                        //     url:'/pages/index/index'
-                        // })
                         this.handleLogin()
                     }}>登录</Button></View>
-                  </View>
+                </View>
+               
                 </View>
             </View>
 

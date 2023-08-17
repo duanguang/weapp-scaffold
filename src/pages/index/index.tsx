@@ -1,80 +1,64 @@
-import { Component } from 'react'
-import { View, Navigator } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import { Component,useEffect,useState } from 'react'
+import { View,Navigator } from '@tarojs/components'
+import Taro,{ useDidShow } from '@tarojs/taro'
 import './index.less'
 import '../../app.less'
 import UserStore from '@/store/user.store';
 import { Store } from '@/store/core.store'
-import { AtAvatar, AtTag } from 'taro-ui'
+import { AtAvatar,AtTag } from 'taro-ui'
 import * as api from '@/api/index'
 import DropList from '@/components/base/drop-list'
-import { bind,observer } from '@/store/core.store';
-import PlaceStore from '@/store/place.store';
 import * as path from '@/constants/route.config'
-
-interface IProps{
-  store: UserStore;
-  placeStore: PlaceStore;
+import { DeviceData } from 'types/device'
+import { customTabBar } from '@/hooks/tabbar'
+import { observer } from '@/store/core.store';
+import DeviceStore from '@/store/device.store'
+const defaultImg = ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.alicdn.com%2Fi4%2F400893004%2FO1CN01Hxp7Zt1Y3sSkAhPCg_%21%21400893004.jpg&refer=http%3A%2F%2Fimg.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1694103865&t=a0af164da3ac8b07f3d4da08f3f91f5f',
+  'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcbu01.alicdn.com%2Fimg%2Fibank%2FO1CN01jDPJ7B2M45ZlPGjRg_%21%213174689773-0-cib.jpg&refer=http%3A%2F%2Fcbu01.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1694103920&t=feca675376253504bda517889eda3262',
+  'https://img12.360buyimg.com/n0/jfs/t1/24015/26/14026/112798/5ca42c95E8a8e8e0a/4d438883bdfc1fb7.jpg'
+]
+const status = {
+  0: 'online',
+  1: 'online',
+  2: 'offline',
+  3:'offline'
 }
-@bind({ store: UserStore,placeStore:PlaceStore })
-@observer
-export default class Index extends Component<IProps> {
-  state = {
-    carList: [
-      {
-        cover: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.alicdn.com%2Fi4%2F400893004%2FO1CN01Hxp7Zt1Y3sSkAhPCg_%21%21400893004.jpg&refer=http%3A%2F%2Fimg.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1694103865&t=a0af164da3ac8b07f3d4da08f3f91f5f',
-        carNum: '267678',
-        name: '挖掘机',
-        online: 1
-      },
-      {
-        cover: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcbu01.alicdn.com%2Fimg%2Fibank%2FO1CN01jDPJ7B2M45ZlPGjRg_%21%213174689773-0-cib.jpg&refer=http%3A%2F%2Fcbu01.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1694103920&t=feca675376253504bda517889eda3262',
-        carNum: '677899',
-        name: '警车',
-        online: 0
-      },
-      {
-        cover: 'https://img12.360buyimg.com/n0/jfs/t1/24015/26/14026/112798/5ca42c95E8a8e8e0a/4d438883bdfc1fb7.jpg',
-        carNum: '334234',
-        name: '超级飞侠乐迪',
-        online: 0
-      },
-    ]
-  }
-
-  getWechatToken () {
+const statu = {
+  0: 'check',
+  1: 'check',
+  2: 'close',
+  3:'close'
+}
+const Index=observer(()=> {
+  const store = Store.getStore(UserStore)
+  const device_store = Store.getStore(DeviceStore)
+  customTabBar(0)
+  const getWechatToken = () => {
     api.getWechatToken()
-    .then(res => {
-      api.getwxacodeunlimit({token: res.data.accessToken as string, sence: 'deviceCode_865328068118396'})
-    })
+      .then(res => {
+        api.getwxacodeunlimit({ token: res.data.accessToken as string,sence: 'deviceCode_865328068118396' })
+      })
   }
-
-  componentDidMount() {
-    api.getPlaces().then(res => {
-      if (res.data.code === '0000') this.props.placeStore.setPlaces(res.data.data)
+  useEffect(() => {
+    // api.getPlaces().then(res => {
+    //   if (res?.data?.code === '0000') this.props.placeStore.setPlaces(res.data.data)
+    // })
+    api.deviceApi.list().then((res) => {
+      if (Array.isArray(res?.data?.records)) {
+        device_store.setDeviceList(res?.data?.records)
+       }
     })
-  }
-
-  componentWillUnmount() { }
-
-  componentDidShow() {
-    // 页面 onShow 时
-    const pageObj = Taro.getCurrentInstance().page
-    const tabbar = Taro.getTabBar(pageObj)
-    console.log(tabbar)
-
+  },[])
+  useDidShow(() => {
     try {
       var value = Taro.getStorageSync('token')
       if (!value) {
-        // Do something with return value
         Taro.navigateTo({
           url: path.LOGIN,
         })
         return
       }
     } catch (e) {
-      const store = Store.getStore(UserStore)
-      // Do something when catch error
       if (!store.token) {
         Taro.navigateTo({
           url: path.LOGIN,
@@ -82,69 +66,80 @@ export default class Index extends Component<IProps> {
         return
       }
     }
-  }
-
-  componentDidHide() { }
-
-
-
-  render() {
-
-    const store = Store.getStore(UserStore)
-    console.dir(store)
-    return (
-      <View className='index page'>
-        <DropList/>
-        <View className='m-flex items-center white-text bg-theme p6'>
-          <View className='font-size-13 pr-3'>锐丰广场</View>
-          <View className='at-icon at-icon-chevron-down font-size-13'></View>
-          <View className='search-wrap bg-white flex-1 ml-5 at-row at-row__justify--end at-row__align--center'>
-              <View className='bg-theme small-btn white-text font-size-12 px-6 mx-3'>搜索</View>
-          </View>
-        </View>
-        <View className='m-flex justify-between mt-6 px-6 items-center'>
-          <View className='m-flex items-center'>
-            <View className='font-size-15'>设备列表</View>
-            <View className='font-size-12 gray-text-400'>/5</View>
-          </View>
-          <View
-            className='at-icon at-icon-bullet-list font-size-20 gray-text-500'
-            onClick={this.getWechatToken}
-          >
-           </View>
-        </View>
-        <View className='px-6'>
-          {
-            this.state.carList.map((item) => {
-              return (
-                <Navigator url='/packagea/pages/car-detail/index' hoverClass='navigator-hover'>
-                  <View
-                    className='card m-flex mt-8 items-center'
-                  >
-                    <AtAvatar size="large" image={item.cover}></AtAvatar>
-                    <View className='ml-8 flex-1'>
-                      <View className='font-size-16'>{item.name}</View>
-                      <View className='mt-5'>
-                        <AtTag
-                          size='small'
-                          name={item.carNum}
-                          type='primary'
-                          circle
-                        >
-                          编号：{item.carNum}
-                        </AtTag>
-                      </View>
-                    </View>
-                    <View className={`status ${item.online ? 'online': 'offline'} m-flex items-center justify-center`}>
-                      <View className={`at-icon at-icon-${item.online ? 'check' : 'close'} font-size-13 white-text`}></View>
-                    </View>
-                  </View>
-                </Navigator>
-              )
-            })
-          }
+  })
+  return (
+    <View className='index page'>
+      <DropList />
+      <View className='m-flex items-center white-text bg-theme p6'>
+        <View className='font-size-13 pr-3'>锐丰广场</View>
+        <View className='at-icon at-icon-chevron-down font-size-13'></View>
+        <View className='search-wrap bg-white flex-1 ml-5 at-row at-row__justify--end at-row__align--center'>
+          <View className='bg-theme small-btn white-text font-size-12 px-6 mx-3'>搜索</View>
         </View>
       </View>
-    )
-  }
-}
+      <View className='m-flex justify-between mt-6 px-6 items-center'>
+        <View className='m-flex items-center'>
+          <View className='font-size-15'>设备列表</View>
+          <View className='font-size-12 gray-text-400'></View>
+        </View>
+        <View
+          className='at-icon at-icon-bullet-list font-size-20 gray-text-500'
+          onClick={getWechatToken}
+        >
+        </View>
+      </View>
+      <View className='px-6'>
+        {
+          device_store.deviceList.map((item) => {
+            return (
+              <Navigator url={ `/packagea/pages/car-detail/index?id=${item.deviceCode}`} hoverClass='navigator-hover'>
+                <View
+                  className='card m-flex mt-8 items-center'
+                >
+                  <AtAvatar size="large" image={item.headImg||defaultImg[2]}></AtAvatar>
+                  <View className='ml-8 flex-1'>
+                    <View className='font-size-16'>{item.nickname}</View>
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.bindSort.toString()}
+                        type='primary'
+                        circle
+                      >
+                        编号：{item.deviceCode}
+                      </AtTag>
+                    </View>
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.statusDesc.toString()}
+                        type='primary'
+                        circle
+                      >
+                        状态: {item.statusDesc}
+                      </AtTag>
+                    </View>
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.bindStatusDesc}
+                        type='primary'
+                        circle
+                      >
+                        绑定: {item.bindStatusDesc}
+                      </AtTag>
+                    </View>
+                  </View>
+                  <View className={`status ${status[item.status]} m-flex items-center justify-center`}>
+                    <View className={`at-icon at-icon-${statu[item.status]} font-size-13 white-text`}></View>
+                  </View>
+                </View>
+              </Navigator>
+            )
+          })
+        }
+      </View>
+    </View>
+  )
+})
+export default Index

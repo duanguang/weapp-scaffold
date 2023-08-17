@@ -1,15 +1,14 @@
 import Taro from '@tarojs/taro'
 import { Component } from 'react'
-import { CoverView, CoverImage } from '@tarojs/components'
+import { CoverView,CoverImage } from '@tarojs/components'
 import './index.css'
 import '../app.css'
-
-export default class CustomTabBar extends Component{
+import scan from '../assets/image/car-scan.png';
+export default class CustomTabBar extends Component {
   state = {
     selected: 0,
     color: '#777777',
     selectedColor: '#fc690a',
-    backgroundColor: '#fc690a',
     borderStyle: 'white',
     list: [
       {
@@ -19,7 +18,7 @@ export default class CustomTabBar extends Component{
         iconPath: '../assets/image/car.png',
       },
       {
-        iconPath: '../assets/image/scan.png',
+        iconPath: '../assets/image/car-scan.png',
       },
       {
         pagePath: 'pages/cars/index',
@@ -29,24 +28,26 @@ export default class CustomTabBar extends Component{
       }
     ]
   }
-
-  switchTab = (item, index) => {
-      this.setState({selected: index})
-      const url = '/' + item.pagePath
-      Taro.switchTab({
-          url: url
-      })
+  setSelected(idx: number) {
+    this.setState({
+      selected: idx
+    })
+  }
+  switchTab = (item,index) => {
+    this.setSelected(index)
+    const url = '/' + item.pagePath
+    Taro.switchTab({
+      url: url
+    })
   }
 
   scanCode = () => {
-    console.log('sm')
     // 跳转到目的页面，打开新页面
     Taro.scanCode({
       fail: (err) => {
         console.log(err)
       },
       success: (res) => {
-        console.log(res.path)
         Taro.navigateTo({
           url: `/${res.path}`,
         })
@@ -54,36 +55,20 @@ export default class CustomTabBar extends Component{
     })
   }
 
-  tabItem = (item, index) => {
-    return <CoverView className='bottom-tab-item' onClick={this.switchTab.bind(this, item, index)} data-path={item.pagePath} key={item.text}>
-              <CoverImage className='bottom-tab-item-img' src={this.state.selected === index ? item.selectedIconPath : item.iconPath} />
-              <CoverView className='bottom-tab-item-text' style={{ color: this.state.selected === index ? this.state.selectedColor : this.state.color }}>
-                  {item.text} {this.state.selected}
-              </CoverView>
-          </CoverView>
+  tabItem = (item,index) => {
+    return <CoverView className='bottom-tab-item' onClick={this.switchTab.bind(this,item,index)} data-path={item.pagePath} key={item.text}>
+      <CoverImage className='bottom-tab-item-img' src={this.state.selected === index ? item.selectedIconPath : item.iconPath} />
+      <CoverView className='bottom-tab-item-text' style={{ color: this.state.selected === index ? this.state.selectedColor : this.state.color }}>
+        {item.text}
+      </CoverView>
+    </CoverView>
   }
-  componentWillMount() { }
-
-  componentDidMount() {
-    console.log('222')
-  }
-
-  componentWillUnmount() { }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() { }
-
-
   render() {
-
-
     return (
       <CoverView className='bottom-tab-wrap'>
         <CoverView className='bottom-tab'>
           {
-              this.tabItem(this.state.list[0], 0)
+            this.tabItem(this.state.list[0],0)
           }
           {
             (
@@ -93,7 +78,7 @@ export default class CustomTabBar extends Component{
             )
           }
           {
-              this.tabItem(this.state.list[2], 2)
+            this.tabItem(this.state.list[2],2)
           }
         </CoverView>
         <CoverView
@@ -101,10 +86,10 @@ export default class CustomTabBar extends Component{
           onClick={this.scanCode.bind(this)}
         >
           <CoverView className='scan-wrap-box m-flex justify-center items-center'>
-              <CoverImage className='scan-img' src='../assets/image/car-scan.png' />
+            <CoverImage className='scan-img' src={scan} />
           </CoverView>
         </CoverView>
-    </CoverView>
+      </CoverView>
     )
   }
 }

@@ -1,5 +1,7 @@
+import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
+import { DeviceData } from 'types/device'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
 const REFETCH_CODE = 800
@@ -70,13 +72,13 @@ export const getPlaces = async() => {
   const res = await taroFetch.request({
     url: `${baseUrl}site-area`
   })
-
+  console.log(res,'res')
   if (res && res.statusCode == ERR_CODE) {
     return Promise.resolve(res.data)
   } else if (res && res.statusCode == REFETCH_CODE) {
     return getPlaces()
   } else {
-    return Promise.reject(res.data && res.data.message || '操作失败')
+    return Promise.resolve(res?.data?.message || '操作失败')
   }
 }
 
@@ -123,3 +125,32 @@ export const startDevice = async (deviceCode:string) => {
     return Promise.reject(res.data && res.data.message || '操作失败')
   }
 }
+
+class DeviceApi{
+  async list(address_code?:string) {
+    return await taroFetch.request({
+      method: 'GET',
+      data:{size:50,current:1},
+      url: `${baseUrl}device/page`
+    }).then((res) => {
+      if (Array.isArray(res.data?.data?.records)) {
+        const status = {
+          0: '空闲',
+          1: '运行',
+          2: '离线',
+          3:'下线'
+        }
+        const bindStatus = {
+          0: '未绑定',
+          1:'已绑定'
+        }
+        res.data?.data?.records.map((item) => {
+           item['statusDesc']=status[item['status']]
+           item['bindStatusDesc']=bindStatus[item['bindStatus']]
+        })
+      }
+      return res.data as RootRespone<DeviceData>
+    })
+  }
+}
+export const deviceApi = new DeviceApi()
