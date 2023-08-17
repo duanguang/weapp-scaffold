@@ -49,11 +49,10 @@ function CarDetail() {
           title: '启动成功',
           icon: 'success',
           duration: 2000,
+          success: () => {
+            Taro.reLaunch({ url: ROUTERS.home });
+          }
         });
-        const timeid= setTimeout(() => {
-          Taro.redirectTo({ url: ROUTERS.home });
-          clearTimeout(timeid);
-         },3000)
       } else {
         Taro.showToast({
           title: '启动失败',
@@ -69,11 +68,10 @@ function CarDetail() {
           title: '暂停成功',
           icon: 'success',
           duration: 2000,
+          success: () => {
+            Taro.reLaunch({ url: ROUTERS.home });
+          }
         })
-       const timeid= setTimeout(() => {
-         Taro.redirectTo({ url: ROUTERS.home });
-         clearTimeout(timeid);
-        },3000)
       } else {
         Taro.showToast({
           title: '暂停失败',
