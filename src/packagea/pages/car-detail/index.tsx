@@ -29,18 +29,19 @@ function CarDetail() {
   //@ts-ignore
   const [detail,setDetail] = useState<DeviceRecord>({})
   const store = Store.getStore(DeviceStore)
-  useLoad((params: { id: string }) => {
+  useLoad((params: { id: string;detail: string}) => {
+    
     const res = store.deviceList.find((item) => item.deviceCode === params.id)
     if (res) {
       setDetail({ ...res })
+    }
+    else if (params.detail) {
+      setDetail({ ...JSON.parse(params.detail) })
     }
   })
   const handleStartDevice = () => {
     api.startDevice(detail?.deviceCode)
   }
-
-
-
   return (
     <View>
       <View className='bg-white at-row px-13 at-row__align--center at-row__justify--between'>
@@ -73,7 +74,7 @@ function CarDetail() {
         <AtButton className='flex-1 mx-6' type='primary' onClick={handleStartDevice}>
           {statusObj[detail.status || 0].btnText}
         </AtButton>
-        <AtButton className='flex-1 mx-6' type='secondary'>编辑设备</AtButton>
+        <AtButton className='flex-1 mx-6' disabled type='secondary'>编辑设备</AtButton>
         <AtButton className='flex-1 mx-6' type='secondary'>解绑设备</AtButton>
       </View>
     </View>

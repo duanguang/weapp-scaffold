@@ -48,3 +48,66 @@ export interface DeviceRecord{
   /** 场地名称 */
   addressName: string;
 }
+
+
+export interface DeviceBindData {
+  /** 设备编码 */
+  deviceCode: string;
+  bindCode?: any;
+  /**设备状态 0-空闲1-下线 2-运作中 3-离线 */
+  status: number;
+  /** 0-摇摇车 */
+  deviceType: number;
+  /** 图片地址 */
+  deviceImg?: string;
+  remark?: string;
+  /** 绑定状态0-未绑定 1-已绑定，取值为0 时，deviceBind字段无值 */
+  bindStatus: number;
+  /** 设备名称 ，未绑定时为空 */
+  nickname: string;
+  /** 绑定信息 */
+  deviceBind: DeviceBind;
+}
+
+interface DeviceBind {
+  addressCode: string;
+  bindSort: number;
+  /** 设备名称 ，未绑定时为空 */
+  nickname: string;
+  /** 商户编号 */
+  merchantCode: string;
+  headImg?: string;
+  remark?: string;
+  tags?: string;
+  /** 绑定用户信息 */
+  bindUser: BindUser;
+  /** 地址信息 */
+  address: Address;
+}
+
+interface Address {
+  status: number;
+  remark?: any;
+  createTime: string;
+  addressCode: string;
+  addressName: string;
+  parentCode: string;
+  /** 上级地址详情 */
+  parentArea: ParentArea;
+}
+
+interface ParentArea {
+  status: number;
+  remark?: any;
+  createTime: string;
+  addressCode: string;
+  addressName: string;
+  parentCode: string;
+  parentArea?: any;
+}
+
+interface BindUser {
+  userCode: string;
+  userNick: string;
+  phone: string;
+}

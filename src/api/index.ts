@@ -1,7 +1,7 @@
 import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
-import { DeviceData } from 'types/device'
+import { DeviceBindData, DeviceData } from 'types/device'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
 const REFETCH_CODE = 800
@@ -84,13 +84,7 @@ export const getPlaces = async() => {
 
 export const scanDevice = async (imei:string) => {
   const res = await taroFetch.request({url: `${baseUrl}device/scan?deviceCode=${imei}`})
-  if (res && res.statusCode == ERR_CODE) {
-    return Promise.resolve(res.data)
-  } else if (res && res.statusCode == REFETCH_CODE) {
-    return scanDevice(imei)
-  } else {
-    return Promise.reject(res.data && res.data.message || '操作失败')
-  }
+  return Promise.resolve(res.data as RootRespone<DeviceBindData>)
 }
 
 
