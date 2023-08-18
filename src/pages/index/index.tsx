@@ -1,9 +1,7 @@
-import { Component,useEffect,useState } from 'react'
+import { useEffect } from 'react'
 import { View,Navigator } from '@tarojs/components'
-import Taro,{ useDidShow } from '@tarojs/taro'
 import './index.less'
 import '../../app.less'
-import UserStore from '@/store/user.store';
 import { Store } from '@/store/core.store'
 import { AtAvatar,AtTag } from 'taro-ui'
 import * as api from '@/api/index'

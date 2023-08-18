@@ -1,7 +1,7 @@
 import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
-import { DeviceBindData, DeviceData } from 'types/device'
+import { DeviceBindData, DeviceData, DeviceRecord } from 'types/device'
 import { UserData } from 'types/user'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
@@ -104,6 +104,21 @@ export const bindDevice = async (data:Device) => {
 
 
 class DeviceApi{
+  dataProcessing(res:DeviceRecord) {
+    const status = {
+      0: '空闲',
+      1: '运行',
+      2: '离线',
+      3:'下线'
+    }
+    const bindStatus = {
+      0: '未绑定',
+      1:'已绑定'
+    }
+    res['statusDesc'] = status[res['status']];
+    res['bindStatusDesc'] = bindStatus[res['bindStatus']];
+    return res;
+  }
   async list(address_code?:string) {
     return await taroFetch.request({
       method: 'GET',
@@ -111,19 +126,8 @@ class DeviceApi{
       url: `${baseUrl}device/page`
     }).then((res) => {
       if (Array.isArray(res?.data?.data?.records)) {
-        const status = {
-          0: '空闲',
-          1: '运行',
-          2: '离线',
-          3:'下线'
-        }
-        const bindStatus = {
-          0: '未绑定',
-          1:'已绑定'
-        }
         res.data?.data?.records.map((item) => {
-           item['statusDesc']=status[item['status']]
-           item['bindStatusDesc']=bindStatus[item['bindStatus']]
+          item = this.dataProcessing(item);
         })
       }
       return res?.data as RootRespone<DeviceData>

@@ -1,20 +1,17 @@
 import { Component,PropsWithChildren } from 'react'
-import { View,Text,Image,Button, CoverImage } from '@tarojs/components'
-import './index.less'
-import * as api from '@/api/index'
+import { View, CoverImage } from '@tarojs/components'
+import './index.less';
+import * as api from '@/api/index';
 import Taro from '@tarojs/taro';
 import scan from '../../assets/image/logo.png';
-import { Store } from '@/store/core.store'
-import DeviceStore from '@/store/device.store';
 import { DeviceRecord } from 'types/device';
+import { deviceApi } from '../../api';
 export default class Scan extends Component<PropsWithChildren>{
   onLoad (query) {
     if (query && query.scene) {
       const arr = query.scene.split('_')
       const imei = arr[1];
-      const store = Store.getStore(DeviceStore)
       api.scanDevice(imei).then(res => {
-        console.log(res,'扫码')
         if (res && res.data) {
           const deviceData = res.data || {}
           if (deviceData.bindStatus === 0) {
@@ -25,17 +22,12 @@ export default class Scan extends Component<PropsWithChildren>{
           } else {
             const { deviceBind,...prop} = deviceData;
             const { bindUser,address,remark,..._prop } = deviceBind;
-            const status = {
-              0: '空闲',
-              1: '运行',
-              2: '离线',
-              3:'下线'
-            }
             //@ts-ignore
             const detail: DeviceRecord = {
               ...prop,
               ..._prop,
-              statusDesc: status[prop['status']],
+              //@ts-ignore
+              ...deviceApi.dataProcessing(prop),
               addressName:address?.addressName
             }
             Taro.redirectTo({
