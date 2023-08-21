@@ -18,12 +18,15 @@ interface IProps{
 export default class Index extends Component<IProps> {
     state = {
       phone: '13838382438',
-      pwd: '789234kliweo'
+      pwd: '789234kliweo',
+      loading: false
     }
     handleUserChange = () => {
     }
     handleLogin = () => {
+      this.setState({loading: true})
       api.login({...this.state}).then(res => {
+        this.setState({loading: true})
         Taro.showToast({
           title: '登录成功',
           icon: 'success',
@@ -48,6 +51,7 @@ export default class Index extends Component<IProps> {
         }, 1000)
       }).catch(err => {
         console.log(err)
+        this.setState({loading: true})
         Taro.showToast({
           title: '登录失败',
           icon: 'error',
@@ -82,11 +86,11 @@ export default class Index extends Component<IProps> {
                         />
                     </View>
                     <View className='submit bg-theme login-item'>
-                      <Button onClick={() => {
+                      <Button loading={this.state.loading} onClick={() => {
                         this.handleLogin()
                     }}>登录</Button></View>
                 </View>
-               
+
                 </View>
             </View>
 

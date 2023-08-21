@@ -182,4 +182,14 @@ view {
 .b-br {
   border: 1rpx solid #eee;
 }
+.running {
+  border: 1px solid #71cc34;
+  background-color: rgba(113, 204, 52, 0.15) !important;
+  color: #71cc34;
+}
+.stop {
+  border: 1px solid #fc690a;
+  background-color: rgba(252, 105, 10, 0.15) !important;
+  color: #fc690a;
+}
 /*# sourceMappingURL=./app.css.map */

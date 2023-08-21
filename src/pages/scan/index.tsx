@@ -12,7 +12,7 @@ export default class Scan extends Component<PropsWithChildren>{
       const arr = query.scene.split('_')
       const imei = arr[1];
       api.scanDevice(imei).then(res => {
-        if (res && res.data) {
+        if (res?.data) {
           const deviceData = res.data || {}
           if (deviceData.bindStatus === 0) {
             // 没有绑定

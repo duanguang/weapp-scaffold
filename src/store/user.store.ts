@@ -26,6 +26,7 @@ export default class UserStore extends Store {
     }
     @observable token = ''
     @observable freshToken = ''
+    @observable loadSwitchPages = 0
 
     @computed get isLogin() {
         const _token = Taro.getStorageSync(USER_ACCESS_TOKEN) as string
@@ -33,6 +34,9 @@ export default class UserStore extends Store {
             return true;
         }
         return false;
+    }
+    @action setLoadSwitchPages(num:number) {
+      this.loadSwitchPages = num
     }
     @action setToken(token: string) {
         this.token = token;
@@ -51,5 +55,6 @@ export default class UserStore extends Store {
         Taro.removeStorageSync(USER_REFRESH_ACCESS_TOKEN);
         this.token = '';
         this.freshToken = '';
+        this.loadSwitchPages = 0
     }
 }

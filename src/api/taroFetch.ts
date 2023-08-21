@@ -43,12 +43,14 @@ const interceptor = function (chain) {
       if (res && res.data.code == '1002') {
         // 登录信息失效
         const freshToken = Taro.getStorageSync(USER_REFRESH_ACCESS_TOKEN)
+        console.log(freshToken, '刷新token')
         if (!freshToken) {
           handleTokenDisable()
           return
         }
         let refreshData = await refreshToken(freshToken)
-        if (refreshData.token) {
+        console.log(refreshData, '刷新api token')
+        if (refreshData?.data?.accessToken) {
           Taro.setStorage({
             key: USER_ACCESS_TOKEN,
             data: refreshData.data.accessToken
@@ -57,7 +59,7 @@ const interceptor = function (chain) {
             key: USER_REFRESH_ACCESS_TOKEN,
             data: refreshData.data.refreshToken
           })
-          return {statusCode: 800}
+          return await chain.proceed(requestParams)
         } else {
           handleTokenDisable()
           return
@@ -78,7 +80,6 @@ export class TaroFetch {
     async request<T = any,U extends string | TaroGeneral.IAnyObject | ArrayBuffer = any | any>(options: Taro.request.Option<T,U>) {
         const token = Taro.getStorageSync(USER_ACCESS_TOKEN)
         options.header = Object.assign(DEFAULT_OPTION,options.header);
-        console.log(options.url)
         if (token && !options.url.includes('login')) {
           options.header['access-token'] = token
         }

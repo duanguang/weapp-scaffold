@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { View,Navigator } from '@tarojs/components'
+import { View,Navigator, ScrollView } from '@tarojs/components'
 import './index.less'
 import '../../app.less'
 import { Store } from '@/store/core.store'
@@ -9,6 +9,7 @@ import DropList from '@/components/base/drop-list'
 import { customTabBar } from '@/hooks/tabbar'
 import { observer } from '@/store/core.store';
 import DeviceStore from '@/store/device.store'
+import Taro, { getCurrentInstance, useLoad, useDidShow, useLaunch } from "@tarojs/taro";
 const defaultImg = ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.alicdn.com%2Fi4%2F400893004%2FO1CN01Hxp7Zt1Y3sSkAhPCg_%21%21400893004.jpg&refer=http%3A%2F%2Fimg.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1694103865&t=a0af164da3ac8b07f3d4da08f3f91f5f',
   'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcbu01.alicdn.com%2Fimg%2Fibank%2FO1CN01jDPJ7B2M45ZlPGjRg_%21%213174689773-0-cib.jpg&refer=http%3A%2F%2Fcbu01.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1694103920&t=feca675376253504bda517889eda3262',
   'https://img12.360buyimg.com/n0/jfs/t1/24015/26/14026/112798/5ca42c95E8a8e8e0a/4d438883bdfc1fb7.jpg'
@@ -16,6 +17,12 @@ const defaultImg = ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.a
 const status = {
   0: 'online',
   1: 'online',
+  2: 'offline',
+  3:'offline'
+}
+const runStatus = {
+  0: 'stop',
+  1: 'running',
   2: 'offline',
   3:'offline'
 }
@@ -34,6 +41,9 @@ const Index=observer(()=> {
         api.getwxacodeunlimit({ token: res.data.accessToken as string,sence: 'deviceCode_865328068118396' })
       })
   }
+  const onRefresherRefresh = () => {
+    console.log(12334)
+  }
   useEffect(() => {
     // api.getPlaces().then(res => {
     //   if (res?.data?.code === '0000') this.props.placeStore.setPlaces(res.data.data)
@@ -44,6 +54,7 @@ const Index=observer(()=> {
        }
     })
   },[])
+
   return (
     <View className='index page'>
       <DropList />
@@ -65,7 +76,17 @@ const Index=observer(()=> {
         >
         </View>
       </View>
-      <View className='px-6'>
+      <ScrollView
+        className='px-6'
+        scrollY
+        fastDeceleration
+        scrollWithAnimation
+        refresherEnabled
+        refresherThreshold={100}
+        refresherTriggered={true}
+        refresherBackground='#ff3344'
+        onRefresherRefresh={onRefresherRefresh}
+      >
         {
           device_store.deviceList.map((item) => {
             return (
@@ -76,6 +97,18 @@ const Index=observer(()=> {
                   <AtAvatar size="large" image={item.headImg||defaultImg[2]}></AtAvatar>
                   <View className='ml-8 flex-1'>
                     <View className='font-size-16'>{item.nickname}</View>
+
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.statusDesc.toString()}
+                        type='primary'
+                        circle
+                        className={runStatus[item.status]}
+                      >
+                        状态: {item.statusDesc}
+                      </AtTag>
+                    </View>
                     <View className='mt-5'>
                       <AtTag
                         size='small'
@@ -86,16 +119,7 @@ const Index=observer(()=> {
                         编号：{item.deviceCode}
                       </AtTag>
                     </View>
-                    <View className='mt-5'>
-                      <AtTag
-                        size='small'
-                        name={item.statusDesc.toString()}
-                        type='primary'
-                        circle
-                      >
-                        状态: {item.statusDesc}
-                      </AtTag>
-                    </View>
+
                     <View className='mt-5'>
                       <AtTag
                         size='small'
@@ -115,7 +139,7 @@ const Index=observer(()=> {
             )
           })
         }
-      </View>
+      </ScrollView>
     </View>
   )
 })

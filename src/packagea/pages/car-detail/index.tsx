@@ -32,7 +32,7 @@ function CarDetail() {
   const [detail,setDetail] = useState<DeviceRecord>({})
   const store = Store.getStore(DeviceStore)
   useLoad((params: { id: string;detail: string}) => {
-    
+    console.log(params)
     const res = store.deviceList.find((item) => item.deviceCode === params.id)
     if (res) {
       setDetail({ ...res })
@@ -56,7 +56,6 @@ function CarDetail() {
       } else {
         Taro.showToast({
           title: '启动失败',
-          icon: 'error',
           duration: 2000
         })
       }
@@ -75,7 +74,6 @@ function CarDetail() {
       } else {
         Taro.showToast({
           title: '暂停失败',
-          icon: 'error',
           duration: 2000
         })
       }

@@ -1,18 +1,13 @@
 .online,
 .running,
 .stop {
-  color: #ffffff;
   border-radius: 44rpx;
   height: 44rpx;
   line-break: 44rpx;
 }
 .online {
+  color: #ffffff;
   background-color: #71cc34;
-}
-.stop {
-  border: 1px solid #ff3345;
-  background-color: none;
-  color: #ff3345;
 }
 .detail-item {
   height: 104rpx;
