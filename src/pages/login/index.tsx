@@ -88,7 +88,8 @@ export default class Index extends Component<IProps> {
                     <View className='submit bg-theme login-item'>
                       <Button loading={this.state.loading} onClick={() => {
                         this.handleLogin()
-                    }}>登录</Button></View>
+                      }}>登录</Button>
+                    </View>
                 </View>
 
                 </View>

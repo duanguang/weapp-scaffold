@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react';
 import { View,Navigator, ScrollView } from '@tarojs/components'
+import VirtialList from '@/components/scroll-list'
 import './index.less'
 import '../../app.less'
 import { Store } from '@/store/core.store'
@@ -33,26 +34,42 @@ const statu = {
   3:'close'
 }
 const Index=observer(()=> {
-  const device_store = Store.getStore(DeviceStore)
   customTabBar(0);
+  const [refresherTriggered, setRefresherTriggered] = useState(false)
+  const device_store = Store.getStore(DeviceStore)
   const getWechatToken = () => {
     api.getWechatToken()
       .then(res => {
         api.getwxacodeunlimit({ token: res.data.accessToken as string,sence: 'deviceCode_865328068118396' })
       })
   }
-  const onRefresherRefresh = () => {
-    console.log(12334)
-  }
-  useEffect(() => {
-    // api.getPlaces().then(res => {
-    //   if (res?.data?.code === '0000') this.props.placeStore.setPlaces(res.data.data)
-    // })
+
+  // 绑定loading
+  const [loading, setLoading] = useState(false);
+
+  // 绑定onFresh
+  const onRefresherPulling = useCallback(() => setLoading(true), []) // getList(); // 异步获取数据 }, []);
+  // 异步更新数据的时候loading设置为false
+  // 绑定onFresh
+  const onScrollToLower = useCallback(() => {
+    getList()
+  }, []) // getList(); // 异步获取数据 }, []);
+
+  const getList = ()=> {
+    Taro.showToast({icon: 'loading', title: '加载中...', duration: 15000})
     api.deviceApi.list().then((res) => {
+      Taro.hideToast()
       if (Array.isArray(res?.data?.records)) {
         device_store.setDeviceList(res?.data?.records)
        }
     })
+  }
+
+  useEffect(() => {
+    // api.getPlaces().then(res => {
+    //   if (res?.data?.code === '0000') this.props.placeStore.setPlaces(res.data.data)
+    // })
+    getList()
   },[])
 
   return (
@@ -76,16 +93,15 @@ const Index=observer(()=> {
         >
         </View>
       </View>
-      <ScrollView
-        className='px-6'
+      {/* <ScrollView
+        className='px-6 scroll-list'
         scrollY
         fastDeceleration
         scrollWithAnimation
         refresherEnabled
-        refresherThreshold={100}
-        refresherTriggered={true}
-        refresherBackground='#ff3344'
-        onRefresherRefresh={onRefresherRefresh}
+        refresherTriggered={loading}
+	      onRefresherPulling={onRefresherPulling}
+	      onRefresherRefresh={onRefresherRefresh}
       >
         {
           device_store.deviceList.map((item) => {
@@ -139,7 +155,73 @@ const Index=observer(()=> {
             )
           })
         }
-      </ScrollView>
+      </ScrollView> */}
+      <VirtialList
+        list={device_store.deviceList}
+        listType='multi'
+        autoScrollTop={false}
+        scrollViewProps={{
+          style: {
+            "height": '90vh',
+          },
+          onScrollToLower: onScrollToLower,
+          lowerThreshold: 124,
+        }}
+        onRender={
+          (item) => {
+            return (
+              <Navigator url={ `/packagea/pages/car-detail/index?id=${item.deviceCode}`} hoverClass='navigator-hover'>
+                <View
+                  className='card m-flex mt-8 items-center'
+                >
+                  <AtAvatar size="large" image={item.headImg||defaultImg[2]}></AtAvatar>
+                  <View className='ml-8 flex-1'>
+                    <View className='font-size-16'>{item.nickname}</View>
+
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.statusDesc.toString()}
+                        type='primary'
+                        circle
+                        className={runStatus[item.status]}
+                      >
+                        状态: {item.statusDesc}
+                      </AtTag>
+                    </View>
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.bindSort.toString()}
+                        type='primary'
+                        circle
+                      >
+                        编号：{item.deviceCode}
+                      </AtTag>
+                    </View>
+
+                    <View className='mt-5'>
+                      <AtTag
+                        size='small'
+                        name={item.bindStatusDesc}
+                        type='primary'
+                        circle
+                      >
+                        绑定: {item.bindStatusDesc}
+                      </AtTag>
+                    </View>
+                  </View>
+                  <View className={`status ${status[item.status]} m-flex items-center justify-center`}>
+                    <View className={`at-icon at-icon-${statu[item.status]} font-size-13 white-text`}></View>
+                  </View>
+                </View>
+              </Navigator>
+            )
+          }
+        }
+      >
+
+      </VirtialList>
     </View>
   )
 })
