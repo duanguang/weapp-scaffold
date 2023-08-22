@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { View,Navigator, ScrollView } from '@tarojs/components'
-import VirtialList from '@/components/scroll-list'
 import './index.less'
 import '../../app.less'
 import { Store } from '@/store/core.store'
@@ -48,13 +47,17 @@ const Index=observer(()=> {
   const [loading, setLoading] = useState(false);
 
   // 绑定onFresh
-  const onRefresherPulling = useCallback(() => setLoading(true), []) // getList(); // 异步获取数据 }, []);
+  const onRefresherPulling = () => {
+    console.log('222')
+  } // getList(); // 异步获取数据 }, []);
   // 异步更新数据的时候loading设置为false
   // 绑定onFresh
   const onScrollToLower = useCallback(() => {
     getList()
   }, []) // getList(); // 异步获取数据 }, []);
-
+  const onScrollToUpper = () => {
+    console.log('顶部');
+  }
   const getList = ()=> {
     Taro.showToast({icon: 'loading', title: '加载中...', duration: 15000})
     api.deviceApi.list().then((res) => {
@@ -93,15 +96,16 @@ const Index=observer(()=> {
         >
         </View>
       </View>
-      {/* <ScrollView
+      <ScrollView
         className='px-6 scroll-list'
         scrollY
+        style={{height:'200px'}}
         fastDeceleration
         scrollWithAnimation
         refresherEnabled
         refresherTriggered={loading}
-	      onRefresherPulling={onRefresherPulling}
-	      onRefresherRefresh={onRefresherRefresh}
+	      onScrollToLower={onRefresherPulling}
+	      onScrollToUpper={onScrollToUpper}
       >
         {
           device_store.deviceList.map((item) => {
@@ -155,8 +159,8 @@ const Index=observer(()=> {
             )
           })
         }
-      </ScrollView> */}
-      <VirtialList
+      </ScrollView>
+      {/* <VirtialList
         list={device_store.deviceList}
         listType='multi'
         autoScrollTop={false}
@@ -221,7 +225,7 @@ const Index=observer(()=> {
         }
       >
 
-      </VirtialList>
+      </VirtialList> */}
     </View>
   )
 })
