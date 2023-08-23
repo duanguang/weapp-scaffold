@@ -74,7 +74,7 @@ view {
   color: #ffffff;
 }
 .link-text {
-  color: #4f9cdf;
+  color: #348cda;
 }
 .font-size-12 {
   font-size: 24rpx;
@@ -200,5 +200,8 @@ view {
   border: 1px solid #fc690a;
   background-color: rgba(252, 105, 10, 0.15) !important;
   color: #fc690a;
+}
+.form-content-wrap {
+  transition: all 0.2s;
 }
 /*# sourceMappingURL=./app.css.map */

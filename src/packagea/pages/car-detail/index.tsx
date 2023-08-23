@@ -53,11 +53,6 @@ function CarDetail() {
             Taro.reLaunch({ url: ROUTERS.home });
           }
         });
-      } else {
-        Taro.showToast({
-          title: '启动失败',
-          duration: 2000
-        })
       }
     }
     else if (detail.status === 1) {
@@ -70,11 +65,6 @@ function CarDetail() {
           success: () => {
             Taro.reLaunch({ url: ROUTERS.home });
           }
-        })
-      } else {
-        Taro.showToast({
-          title: '暂停失败',
-          duration: 2000
         })
       }
     }

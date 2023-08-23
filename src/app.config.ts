@@ -6,6 +6,7 @@ export default defineAppConfig({
     'pages/member/index',
     'pages/scan/index',
     'pages/sign/index',
+    'pages/forget/index',
   ],
   subpackages: [
     {

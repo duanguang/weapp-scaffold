@@ -17,10 +17,15 @@ interface IProps{
 @observer
 export default class Index extends Component<IProps> {
     state = {
-      phone: '13838382438',
-      pwd: '789234kliweo',
+      phone: '15802685782',
+      pwd: '123456',
       loading: false
     }
+    // state = {
+    //   phone: '13838382438',
+    //   pwd: '789234kliweo',
+    //   loading: false
+    // }
     handleUserChange = () => {
     }
     handleLogin = () => {
@@ -86,7 +91,7 @@ export default class Index extends Component<IProps> {
                           onChange={this.handleUserChange.bind(this)}
                         />
                     </View>
-                    <View className='submit bg-theme login-item'>
+                    <View className='submit login-item'>
                       <AtButton type='primary' loading={this.state.loading} onClick={() => {
                         this.handleLogin()
                       }}>登录</AtButton>
@@ -95,12 +100,14 @@ export default class Index extends Component<IProps> {
 
                 </View>
               </View>
-              <View className='text-center font-size-12 link-text p10 m-flex justify-center'>
+              <View className='text-center font-size-14 link-text p10 m-flex justify-center'>
                 <Navigator url="/pages/sign/index">
                   <Text className='px-6'>注册</Text>
                 </Navigator>
                 <Text>|</Text>
-                <Text className='px-6'>忘记密码</Text>
+                <Navigator url="/pages/forget/index">
+                  <Text className='px-6'>忘记密码</Text>
+                </Navigator>
               </View>
             </View>
 

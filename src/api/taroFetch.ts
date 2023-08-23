@@ -15,14 +15,14 @@ const DEFAULT_OPTION = {
 const handleTokenDisable = () => {
   Taro.showToast({
     title: '登录信息已失效',
-    icon: 'error',
+    icon: 'none',
     duration: 2000
   })
   Taro.removeStorageSync(USER_ACCESS_TOKEN);
   Taro.removeStorageSync(USER_REFRESH_ACCESS_TOKEN);
   setTimeout(() => {
     Taro.redirectTo({url: '/pages/login/index'})
-  }, 2000)
+  }, 1000)
 }
 
 
@@ -30,7 +30,7 @@ const handleTokenDisable = () => {
 const handleError = (err: Error) => {
   Taro.showToast({
     title: `errCode:${err.code};${err.message}`,
-    icon: 'error',
+    icon: 'none',
     duration: 3000
   })
 }

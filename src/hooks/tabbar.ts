@@ -25,7 +25,7 @@ export function customTabBar(pageIndex: number) {
     useDidShow(() => {
         const tabbar = Taro.getTabBar<CustomTabBar>(pageCtx)
         if (tabbar) {
-            tabbar?.setSelected(pageIndex)
+          tabbar?.setSelected(pageIndex)
         }
     })
 }

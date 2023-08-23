@@ -170,7 +170,7 @@ class UserApi{
     return await taroFetch.request({
       data,
       method: 'POST',
-      url: `${baseUrl}/login/mail`
+      url: `${baseUrl}login/mail`
     }).then((res) => {
       return res.data as RootRespone<Boolean>
     })

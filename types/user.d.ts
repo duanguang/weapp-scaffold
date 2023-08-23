@@ -1,3 +1,5 @@
+import { VerifyInfo } from './verify'
+
 export interface UserData {
   userCode: string;
   userNick: string;
@@ -23,6 +25,13 @@ export interface AccountInfo {
   passwd: string;
   rePwd: string;
 }
+export interface VerfiyAccountInfo {
+  phone: VerifyInfo;
+  mail: VerifyInfo;
+  code: VerifyInfo;
+  passwd: VerifyInfo;
+  rePwd: VerifyInfo;
+}
 
 type VerfifyType = 0 | 1
 
@@ -32,4 +41,9 @@ export interface VerifyMailData {
   mail: string,
   pwd: string,
   type: VerfifyType
+}
+
+export enum VerfifyTypeEnum {
+  SIGN = 0,
+  PASSWORD
 }
