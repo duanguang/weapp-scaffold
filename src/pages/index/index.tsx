@@ -48,15 +48,16 @@ const Index=observer(()=> {
 
   // 绑定onFresh
   const onRefresherPulling = () => {
-    console.log('222')
+    setLoading(true)
+    console.log('底部')
+    getList()
   } // getList(); // 异步获取数据 }, []);
   // 异步更新数据的时候loading设置为false
   // 绑定onFresh
-  const onScrollToLower = useCallback(() => {
-    getList()
-  }, []) // getList(); // 异步获取数据 }, []);
+
   const onScrollToUpper = () => {
     console.log('顶部');
+    getList();
   }
   const getList = ()=> {
     Taro.showToast({icon: 'loading', title: '加载中...', duration: 15000})
@@ -99,7 +100,7 @@ const Index=observer(()=> {
       <ScrollView
         className='px-6 scroll-list'
         scrollY
-        style={{height:'200px'}}
+        style={{height:'90vh'}}
         fastDeceleration
         scrollWithAnimation
         refresherEnabled

@@ -1,6 +1,6 @@
 import { Component,PropsWithChildren } from 'react'
 import { AtForm, AtInput, AtButton } from 'taro-ui'
-import { View,Button } from '@tarojs/components'
+import { View, Text, Navigator } from '@tarojs/components'
 import './index.less';
 import Taro from '@tarojs/taro';
 import { bind,observer } from '@/store/core.store';
@@ -62,6 +62,7 @@ export default class Index extends Component<IProps> {
     render() {
         return (
             <View className={baseCls}>
+              <View className='flex-1'>
                 <View className='login-bg'></View>
                 <View className='login-content-wrap'>
                   <View className='login-content bg-white'>
@@ -86,13 +87,21 @@ export default class Index extends Component<IProps> {
                         />
                     </View>
                     <View className='submit bg-theme login-item'>
-                      <Button loading={this.state.loading} onClick={() => {
+                      <AtButton type='primary' loading={this.state.loading} onClick={() => {
                         this.handleLogin()
-                      }}>登录</Button>
+                      }}>登录</AtButton>
                     </View>
                 </View>
 
                 </View>
+              </View>
+              <View className='text-center font-size-12 link-text p10 m-flex justify-center'>
+                <Navigator url="/pages/sign/index">
+                  <Text className='px-6'>注册</Text>
+                </Navigator>
+                <Text>|</Text>
+                <Text className='px-6'>忘记密码</Text>
+              </View>
             </View>
 
         )

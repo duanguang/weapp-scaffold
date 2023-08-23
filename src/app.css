@@ -73,6 +73,9 @@ view {
 .white-text {
   color: #ffffff;
 }
+.link-text {
+  color: #4f9cdf;
+}
 .font-size-12 {
   font-size: 24rpx;
 }
@@ -90,6 +93,9 @@ view {
 }
 .font-size-20 {
   font-size: 40rpx;
+}
+.text-center {
+  text-align: center;
 }
 .mt-6 {
   margin-top: 12rpx;
@@ -159,6 +165,9 @@ view {
 }
 .p6 {
   padding: 12rpx;
+}
+.p10 {
+  padding: 20rpx;
 }
 .p-13 {
   padding: 26rpx;

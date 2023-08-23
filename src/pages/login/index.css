@@ -13,7 +13,7 @@
   height: 330rpx;
 }
 .legions-login .login-content-wrap {
-  padding: 24rpx;
+  padding: 40rpx;
 }
 .legions-login .login-content {
   border-radius: 24rpx;
@@ -31,18 +31,10 @@
   height: 551px;
 }
 .legions-login .submit {
-  height: 88rpx;
   margin-top: 100rpx;
 }
 .legions-login .submit button {
-  height: 88rpx;
-  line-height: 88rpx;
-  background: #fc690a;
   border-radius: 12rpx;
-  font-size: 32px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #FFFFFF;
 }
 .legions-login .text {
   height: 54px;

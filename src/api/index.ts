@@ -2,7 +2,7 @@ import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
 import { DeviceBindData, DeviceData, DeviceRecord } from 'types/device'
-import { UserData } from 'types/user'
+import { UserData, AccountInfo, VerifyMailData } from 'types/user'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
 const REFETCH_CODE = 800
@@ -60,8 +60,6 @@ export const createPlace = async() => {
 
   if (res && res.statusCode == ERR_CODE) {
     return Promise.resolve(res.data)
-  } else if (res && res.statusCode == REFETCH_CODE) {
-    createPlace()
   } else {
     return Promise.reject(res.data && res.data.message || '操作失败')
   }
@@ -73,8 +71,6 @@ export const getPlaces = async() => {
   })
   if (res && res.statusCode == ERR_CODE) {
     return Promise.resolve(res.data)
-  } else if (res && res.statusCode == REFETCH_CODE) {
-    return getPlaces()
   } else {
     return Promise.resolve(res?.data?.message || '操作失败')
   }
@@ -95,8 +91,6 @@ export const bindDevice = async (data:Device) => {
 
   if (res && res.statusCode == ERR_CODE) {
     return Promise.resolve(res.data)
-  } else if (res && res.statusCode == REFETCH_CODE) {
-    bindDevice(data)
   } else {
     return Promise.reject(res.data && res.data.message || '操作失败')
   }
@@ -161,5 +155,26 @@ class UserApi{
       return res.data as RootRespone<UserData>
     })
   }
+
+  async sign (data:AccountInfo) {
+    return await taroFetch.request({
+      data,
+      method: 'POST',
+      url: `${baseUrl}/login/regist`
+    }).then((res) => {
+      return res.data as RootRespone<Boolean>
+    })
+  }
+
+  async verifyMail (data:VerifyMailData) {
+    return await taroFetch.request({
+      data,
+      method: 'POST',
+      url: `${baseUrl}/login/mail`
+    }).then((res) => {
+      return res.data as RootRespone<Boolean>
+    })
+  }
 }
 export const userApi = new UserApi()
+
