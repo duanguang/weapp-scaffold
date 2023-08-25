@@ -15,6 +15,7 @@ export default defineAppConfig({
         "pages/dog/index",
         "pages/car-detail/index",
         "pages/bind-car/index",
+        "pages/places/index",
       ]
     }, {
       "root": "packageb",
