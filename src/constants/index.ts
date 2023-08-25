@@ -12,4 +12,4 @@ export const VerifyTips = {
 }
 
 export const phoneReg = /(13\d|14[579]|15[^4\D]|17[^49\D]|18\d)\d{8}/g
-export const mailReg = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/g
+export const mailReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/g

@@ -3,7 +3,7 @@ import { View,Text } from '@tarojs/components'
 import { useEffect,useState,useCallback } from 'react';
 import { ForgetPwdData,ForgetPwdPropType,VerfiyForgetPwdData } from 'types/user';
 import { userApi } from '@/api/index'
-import { VerifyPassword,VerifyTips,mailReg } from '@/constants/index'
+import { VerifyPassword,VerifyTips } from '@/constants/index'
 import Taro from "@tarojs/taro";
 import { ROUTERS } from '@/routers';
 import { COUNTDOWN_SECONDS } from '@/constants/countdown.config';
@@ -16,7 +16,10 @@ export interface IValidRes {
   passwd: boolean;
   rePwd: boolean;
 }
-
+function validateEmail(email) {
+  var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
 const Sign = () => {
 
   const [account,setAccount] = useState<ForgetPwdData>({
@@ -37,6 +40,7 @@ const Sign = () => {
   const handleChange = useCallback((type: 'mail' | 'passwd' | 'rePwd' | 'code',val: string) => {
     const value = { ...account };
     value[type] = val;
+    console.log('change')
     setAccount({ ...value });
   },[account])
 
@@ -66,10 +70,12 @@ const Sign = () => {
     }
   }
   const handleSubmit = useCallback(async () => {
-    if (!mailReg.test(account.mail)) {
-      Taro.showToast({
-        title: '邮箱格式错误',
-        icon: 'error',
+    console.log(mailReg.test(account.mail),!mailReg.test(account.mail),account.mail)
+    if (!validateEmail(account.mail)) {
+      console.log('222')
+      Taro.atMessage({
+        message: '邮箱格式错误',
+        // icon: 'error',
         duration: 2000,
       })
       const value = { ...valid };
