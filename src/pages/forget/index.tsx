@@ -1,45 +1,53 @@
-import { AtMessage, AtInput, AtButton } from 'taro-ui'
-import { View, Text } from '@tarojs/components'
-import { useEffect, useState, useCallback } from 'react';
-import { ForgetPwdData, ForgetPwdPropType, VerfiyForgetPwdData } from 'types/user';
+import { AtMessage,AtInput,AtButton } from 'taro-ui'
+import { View,Text } from '@tarojs/components'
+import { useEffect,useState,useCallback } from 'react';
+import { ForgetPwdData,ForgetPwdPropType,VerfiyForgetPwdData } from 'types/user';
 import { userApi } from '@/api/index'
-import { VerifyPassword, VerifyTips, mailReg } from '@/constants/index'
+import { VerifyPassword,VerifyTips,mailReg } from '@/constants/index'
 import Taro from "@tarojs/taro";
 import { ROUTERS } from '@/routers';
 import { COUNTDOWN_SECONDS } from '@/constants/countdown.config';
 
-type TipType =  "info" | "success" | "error" | "warning" | undefined
-interface InfoData {
-  text?: string,
-  type: ForgetPwdPropType,
-  valid?: boolean,
-  tipType?: TipType
+type TipType = "info" | "success" | "error" | "warning" | undefined
+
+export interface IValidRes {
+  mail: boolean;
+  code: boolean;
+  passwd: boolean;
+  rePwd: boolean;
 }
 
 const Sign = () => {
-  const verifyDataCopy:VerfiyForgetPwdData = {} as VerfiyForgetPwdData
-  const [accountInfo, setAccountInfo] = useState<ForgetPwdData>({} as ForgetPwdData)
-  const [verfiyForgetPwdData, setVerfiyForgetPwdData] = useState<VerfiyForgetPwdData>({} as VerfiyForgetPwdData)
-  const [loading, setLoading] = useState<boolean | undefined>(false)
-  const [countdown, setCountdown] = useState<number>(0)
-  const [verifyLoading, setVerifyLoading] = useState<boolean|undefined>(false)
 
-  const handleChange = useCallback((type, e) => {
-    let _accountInfo = {...accountInfo}
-    _accountInfo[type] = e
-    if (verfiyForgetPwdData[type]?.valid) handleVerifyData({type, valid: false, text: ''})
-    setAccountInfo(_accountInfo)
-  }, [accountInfo, setAccountInfo])
+  const [account,setAccount] = useState<ForgetPwdData>({
+    code: '',
+    mail: '',
+    rePwd: '',
+    passwd: ''
+  })
+  const [valid,setValid] = useState<IValidRes>({
+    code: false,
+    mail: false,
+    rePwd: false,
+    passwd: false
+  })
+  const [loading,setLoading] = useState<boolean | undefined>(false)
+  const [verify_state,setVerifyState] = useState<boolean | undefined>(false)
+  const [countdown,setCountdown] = useState<number>(0)
+  const handleChange = useCallback((type: 'mail' | 'passwd' | 'rePwd' | 'code',val: string) => {
+    const value = { ...account };
+    value[type] = val;
+    setAccount({ ...value });
+  },[account])
 
-  const handleVerifyMail =  async() => {
-    setVerifyLoading(true)
+  const handleVerifyMail = async () => {
+    setVerifyState(true)
     const res = await userApi.verifyMail({
-      mail: accountInfo.mail,
+      mail: account.mail,
       type: 1,
       pwd: VerifyPassword
     })
-    setVerifyLoading(false)
-
+    setVerifyState(false)
     if (res?.data) {
       Taro.atMessage({
         'message': '发送成功',
@@ -51,126 +59,44 @@ const Sign = () => {
       let timer = setInterval(() => {
         seconds = seconds - 1
         setCountdown(seconds)
-        if (seconds<=0) {
+        if (seconds <= 0) {
           clearInterval(timer)
         }
-      }, 1000)
+      },1000)
     }
   }
-  const handleSubmit = async () => {
-    resetVerifyData()
-    
-    // 验证表单
-    const hasErr = ['mail', 'code', 'passwd', 'rePwd'].some((key:ForgetPwdPropType) => {
-      return handleVerify(key)
-    })
-    if (hasErr) return
-    setLoading(true)
-    const res = await userApi.forget(accountInfo)
-    setLoading(false)
-    if (res?.data) {
-      Taro.atMessage({
-        'message': '密码重置成功',
-        'type': 'success',
-        duration: 1500
+  const handleSubmit = useCallback(async () => {
+    if (!mailReg.test(account.mail)) {
+      Taro.showToast({
+        title: '邮箱格式错误',
+        icon: 'error',
+        duration: 2000,
       })
-      setTimeout(() => {
-        Taro.reLaunch({ url: ROUTERS.login });
-      }, 1500)
+      const value = { ...valid };
+      value.mail = true;
+      setValid(value);
+      return
     }
-  }
+  },[])
 
-  const resetVerifyData = () => {
-    ['mail', 'passwd', 'rePwd', 'code',].forEach((type:ForgetPwdPropType) => {
-      handleVerifyData({type, valid: false, text: ''})
-    })
-  }
 
-  const handleVerifyData = (data:InfoData) => {
-    const {type, text, valid = true, tipType} = data
 
-    verifyDataCopy[type]= {
-      text: text || '', valid
-    }
-    setVerfiyForgetPwdData(verifyDataCopy)
 
-    if (valid) {
-      Taro.atMessage({
-        'message': text || '',
-        'type': tipType,
-        duration: 1800
-      })
-    }
-  }
 
-  const handleVerify = (type:ForgetPwdPropType) => {
-    let text:string = '', tipType = "warning" as TipType, valid:boolean = false
-    const { mail, passwd, rePwd, code } = accountInfo
-    const verifyFns = {
-      mail: () => {
-        console.log('正则值',mailReg, mailReg.test(mail), mail)
-        console.log('正则值',mailReg, mailReg.test(mail), mail)
-        console.log('正则值',mailReg, mailReg.test(mail), mail)
-        const testVal = mailReg.test(mail)
-        if (!mail) {
-          text = VerifyTips.NO_MAIL
-          tipType = "warning"
-          valid = true
-        } else if (!testVal) {
-          console.log('邮箱不正确了', testVal)
-          text = VerifyTips.ERR_FMT_MAIL
-          tipType = 'error'
-          valid = true
-        }
-      },
-      code: () => {
-        if (!code) {
-          text = VerifyTips.NO_VERIFY_CODE
-          tipType = "warning"
-          valid = true
-        }
-      },
-      passwd: () => {
-        if (!passwd) {
-          text = VerifyTips.NO_PWD
-          tipType = "warning"
-          valid = true
-        } else if (passwd.length < 6 || passwd.length > 30) {
-          text = VerifyTips.ERR_FMT_PWD
-          tipType = 'error'
-          valid = true
-        }
-      },
-      rePwd: () => {
-        if (!rePwd) {
-          text = VerifyTips.NO_REPWD
-          tipType = "warning"
-          valid = true
-        } else if (passwd !== rePwd) {
-          text = VerifyTips.DIFF_PWD
-          tipType = 'error'
-          valid = true
-        }
-      }
-    }
-    verifyFns[type]()
-    //处理提示数据
-    handleVerifyData({type, valid, text, tipType })
-    return valid
-  }
+
 
   return (
     <View>
-      <AtMessage/>
+      <AtMessage />
       <View className='bg-white p6 mt-12'>
-      <AtInput
+        <AtInput
           name='mail'
           title='邮箱'
           clear
-          error={verfiyForgetPwdData.mail?.valid}
-          value={accountInfo.mail}
-          onChange={(e) => {
-            handleChange('mail', e)
+          error={valid.mail}
+          value={account.mail}
+          onChange={(val) => {
+            handleChange('mail',val.toString())
           }}
         />
         <AtInput
@@ -178,10 +104,10 @@ const Sign = () => {
           clear
           title='密码'
           type='password'
-          error={verfiyForgetPwdData.passwd?.valid}
-          value={accountInfo.passwd}
-          onChange={(e) => {
-            handleChange('passwd', e)
+          error={valid.passwd}
+          value={account.passwd}
+          onChange={(val) => {
+            handleChange('passwd',val.toString())
           }}
         />
         <AtInput
@@ -189,11 +115,11 @@ const Sign = () => {
           title='确认密码'
           type='password'
           clear
-          error={verfiyForgetPwdData.rePwd?.valid}
-          value={accountInfo.rePwd}
-          disabled={!accountInfo.passwd}
+          error={valid.rePwd}
+          value={account.rePwd}
+          disabled={!account.passwd}
           onChange={(e) => {
-            handleChange('rePwd', e)
+            handleChange('rePwd',e.toString())
           }}
         />
         <AtInput
@@ -201,14 +127,14 @@ const Sign = () => {
           title='验证码'
           type='text'
           clear
-          error={verfiyForgetPwdData.code?.valid}
-          value={accountInfo.code}
+          error={valid.code}
+          value={account.code}
           onChange={(e) => {
-            handleChange('code', e)
+            handleChange('code',e.toString())
           }}
         >
-          {!countdown ? 
-            <AtButton size="small" loading={verifyLoading} className='px-3' onClick={handleVerifyMail}>
+          {!countdown ?
+            <AtButton size="small" loading={verify_state} className='px-3' onClick={handleVerifyMail}>
               发送邮箱验证码
             </AtButton> :
             (<Text className='gray-text-300 font-size-12'>{countdown}s后再试</Text>)
@@ -217,7 +143,7 @@ const Sign = () => {
       </View>
 
       <View className='submit px-13'>
-        {loading==true}
+        {loading == true}
         <AtButton
           className='mt-12'
           type='primary'
