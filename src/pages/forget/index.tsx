@@ -67,10 +67,10 @@ const Sign = () => {
   }
   const handleSubmit = useCallback(async () => {
     if (!mailReg.test(account.mail)) {
-      Taro.showToast({
-        title: '邮箱格式错误',
-        icon: 'error',
-        duration: 2000,
+      Taro.atMessage({
+        'message': VerifyTips.ERR_FMT_MAIL,
+        'type': 'error',
+        duration: 1800
       })
       const value = { ...valid };
       value.mail = true;
