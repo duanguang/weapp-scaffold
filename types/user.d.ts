@@ -32,10 +32,17 @@ export interface VerfiyAccountInfo {
   passwd: VerifyInfo;
   rePwd: VerifyInfo;
 }
+export interface VerfiyForgetPwdData {
+  mail: VerifyInfo;
+  code: VerifyInfo;
+  passwd: VerifyInfo;
+  rePwd: VerifyInfo;
+}
 
 type VerfifyType = 0 | 1
 
 export type SignPropType = 'phone' | 'code' | 'mail' | 'passwd' | 'rePwd'
+export type ForgetPwdPropType = 'code' | 'mail' | 'passwd' | 'rePwd'
 
 export interface VerifyMailData {
   mail: string,
@@ -46,4 +53,11 @@ export interface VerifyMailData {
 export enum VerfifyTypeEnum {
   SIGN = 0,
   PASSWORD
+}
+
+export interface ForgetPwdData{
+  mail: string;
+  code: string;
+  passwd: string;
+  rePwd: string;
 }

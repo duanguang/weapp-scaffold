@@ -2,7 +2,7 @@ import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
 import { DeviceBindData, DeviceData, DeviceRecord } from 'types/device'
-import { UserData, AccountInfo, VerifyMailData } from 'types/user'
+import { UserData, AccountInfo, VerifyMailData, ForgetPwdData } from 'types/user'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
 const REFETCH_CODE = 800
@@ -152,7 +152,7 @@ class UserApi{
       method: 'GET',
       url: `${baseUrl}/user-info`
     }).then((res) => {
-      return res.data as RootRespone<UserData>
+      return res?.data as RootRespone<UserData>
     })
   }
 
@@ -162,7 +162,7 @@ class UserApi{
       method: 'POST',
       url: `${baseUrl}/login/regist`
     }).then((res) => {
-      return res.data as RootRespone<Boolean>
+      return res?.data as RootRespone<Boolean>
     })
   }
 
@@ -172,7 +172,17 @@ class UserApi{
       method: 'POST',
       url: `${baseUrl}login/mail`
     }).then((res) => {
-      return res.data as RootRespone<Boolean>
+      return res?.data as RootRespone<Boolean>
+    })
+  }
+  
+  async forget (data:ForgetPwdData) {
+    return await taroFetch.request({
+      data,
+      method: 'PUT',
+      url: `${baseUrl}login/forget`
+    }).then((res) => {
+      return res?.data as RootRespone<Boolean>
     })
   }
 }

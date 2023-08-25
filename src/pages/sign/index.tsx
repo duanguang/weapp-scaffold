@@ -3,9 +3,10 @@ import { View, Text } from '@tarojs/components'
 import { useEffect, useState, useCallback } from 'react';
 import { AccountInfo, SignPropType, VerfiyAccountInfo } from 'types/user';
 import { userApi } from '@/api/index'
-import { VerifyPassword, VerifyTips, phoneReg, mailReg } from '@/constants/index'
+import { VerifyPassword, VerifyTips, mailReg } from '@/constants/index'
 import Taro, { getCurrentInstance, useDidShow, useLoad } from "@tarojs/taro";
 import { ROUTERS } from '@/routers';
+import { COUNTDOWN_SECONDS } from '@/constants/countdown.config';
 
 type TipType =  "info" | "success" | "error" | "warning" | undefined
 interface InfoData {
@@ -16,15 +17,16 @@ interface InfoData {
 }
 
 const Sign = () => {
-  const [accountInfo, setAccountInfo] = useState<AccountInfo>({phone: '15802685782'} as AccountInfo)
+  const [accountInfo, setAccountInfo] = useState<AccountInfo>({} as AccountInfo)
   const [verfiyAccountInfo, setVerfiyAccountInfo] = useState<VerfiyAccountInfo>({} as VerfiyAccountInfo)
-  const [loading] = useState<boolean|undefined>(false)
+  const [loading, setLoading] = useState<boolean|undefined>(false)
   const [countdown, setCountdown] = useState<number>(0)
-  const [btnDisable, setBtnDisable] = useState<boolean>(true)
   const [verifyLoading, setVerifyLoading] = useState<boolean|undefined>(false)
+
   const handleChange = useCallback((type, e) => {
     let _accountInfo = {...accountInfo}
     _accountInfo[type] = e
+    handleVerifyData({type, valid: false, text: ''})
     setAccountInfo(_accountInfo)
   }, [accountInfo, setAccountInfo])
 
@@ -42,7 +44,7 @@ const Sign = () => {
         'type': 'success',
         duration: 2000
       })
-      let seconds = 20
+      let seconds = COUNTDOWN_SECONDS
       setCountdown(seconds)
       let timer = setInterval(() => {
         seconds = seconds - 1
@@ -54,8 +56,16 @@ const Sign = () => {
     }
   }
   const handleSign = async () => {
+    resetVerifyData()
+    // 验证表单
+    const avaliable = ['phone', 'mail', 'code', 'passwd', 'rePwd'].every((key:SignPropType) => {
+      return handleVerify(key)
+    })
+    console.log(avaliable)
+    if (!avaliable) return
+    setLoading(true)
     const res = await userApi.sign(accountInfo)
-    console.log(res)
+    setLoading(false)
     if (res?.data) {
       Taro.atMessage({
         'message': '注册成功',
@@ -66,6 +76,12 @@ const Sign = () => {
         Taro.reLaunch({ url: ROUTERS.login });
       }, 1500)
     }
+  }
+
+  const resetVerifyData = () => {
+    ['phone', 'mail', 'code', 'passwd', 'rePwd'].forEach((type:SignPropType) => {
+      handleVerifyData({type, valid: false, text: ''})
+    })
   }
 
   const handleVerifyData = (data:InfoData) => {
@@ -95,16 +111,13 @@ const Sign = () => {
           text = VerifyTips.NO_PHONE
           tipType = "warning"
           valid = true
-        } else if (!phoneReg.test(phone)) {
-          text = VerifyTips.ERR_FMT_PHONE
-          tipType = 'error'
-          valid = true
         }
         // handleVerifyData({type: 'phone', valid: false, text, tipType })
       },
       mail: () => {
         if (!mail) {
-          text = VerifyTips.NO_MAIL
+          text = VerifyTips.
+          NO_MAIL
           tipType = "warning"
           valid = true
         } else if (!mailReg.test(mail)) {
@@ -114,7 +127,11 @@ const Sign = () => {
         }
       },
       code: () => {
-
+        if (!code) {
+          text = VerifyTips.NO_VERIFY_CODE
+          tipType = "warning"
+          valid = true
+        }
       },
       passwd: () => {
         if (!passwd) {
@@ -141,19 +158,11 @@ const Sign = () => {
     }
     verifyFns[type]()
     handleVerifyData({type, valid, text, tipType })
-    
+    return !valid
   }
   
   useEffect(() => {
-    const avaliable = ['phone', 'mail', 'code', 'passwd', 'rePwd'].every(key => {
-      return !verfiyAccountInfo[key]?.valid && accountInfo[key]
-    })
-
-    console.log(avaliable)
-  
-    setBtnDisable(!avaliable)
-
-  }, [setBtnDisable, verfiyAccountInfo, accountInfo])
+  }, [])
 
   return (
     <View>
@@ -169,9 +178,6 @@ const Sign = () => {
           onChange={(e) => {
             handleChange('phone', e)
           }}
-          onBlur={()=> {
-            handleVerify('phone')
-          }}
         />
         <AtInput
           name='mail'
@@ -181,9 +187,6 @@ const Sign = () => {
           value={accountInfo.mail}
           onChange={(e) => {
             handleChange('mail', e)
-          }}
-          onBlur={()=> {
-            handleVerify('mail')
           }}
         />
         <AtInput
@@ -196,9 +199,6 @@ const Sign = () => {
           onChange={(e) => {
             handleChange('passwd', e)
           }}
-          onBlur={()=> {
-            handleVerify('passwd')
-          }}
         />
         <AtInput
           name='rePwd'
@@ -210,9 +210,6 @@ const Sign = () => {
           disabled={!accountInfo.passwd}
           onChange={(e) => {
             handleChange('rePwd', e)
-          }}
-          onBlur={()=> {
-            handleVerify('rePwd')
           }}
         />
         <AtInput
@@ -239,7 +236,6 @@ const Sign = () => {
           className='mt-12'
           type='primary'
           loading={loading}
-          disabled = {btnDisable}
           onClick={() => {
             handleSign()
           }}>注册</AtButton>
