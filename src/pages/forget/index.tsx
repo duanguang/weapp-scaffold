@@ -77,7 +77,7 @@ const Sign = () => {
       setValid(value);
       return
     }
-  },[])
+  },[account])
 
 
 
