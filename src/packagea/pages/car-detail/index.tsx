@@ -7,66 +7,37 @@ import * as api from '@/api/index'
 import { useLoad } from '@tarojs/taro';
 import { Store } from '@/store/core.store'
 import DeviceStore from '@/store/device.store';
-import { DeviceRecord } from 'types/device';
 import Taro from '@tarojs/taro';
-import { ROUTERS } from '@/routers';
-const statusObj = {
-  0: {
-    className: 'stop',
-    btnText: '远程启动'
-  },
-  1: {
-    className: 'running',
-    btnText: '远程关闭'
-  },
-  2: {
-    className: 'offline'
-  },
-  3: {
-    className: 'offline'
-  }
-}
 
-function CarDetail() {
-  //@ts-ignore
-  const [detail,setDetail] = useState<DeviceRecord>({})
+import { observer } from '@/store/core.store';
+const CarDetail=observer(()=> {
   const store = Store.getStore(DeviceStore)
-  useLoad((params: { id: string;detail: string}) => {
-    console.log(params)
-    const res = store.deviceList.find((item) => item.deviceCode === params.id)
-    if (res) {
-      setDetail({ ...res })
-    }
-    else if (params.detail) {
-      setDetail({ ...JSON.parse(params.detail) })
-    }
+  useLoad((params: { id: string}) => {
+    store.getDetail(params.id);
   })
   const handleStartDevice =async () => {
-    if (detail.status === 0) {
-      const res = await api.deviceApi.start(detail?.deviceCode);
+    if (store.detail?.bindStatus === 1) {
+      const res = await api.deviceApi.start(store.detail?.deviceCode);
       if (res?.data) {
         Taro.showToast({
           title: '启动成功',
           icon: 'success',
           duration: 2000,
           success: () => {
-            Taro.reLaunch({ url: ROUTERS.home });
+            const timeid = setTimeout(() => {
+              store.getDetail(store.detail?.deviceCode);
+              clearTimeout(timeid);
+            },3000)
           }
         });
       }
     }
-    else if (detail.status === 1) {
-      const res = await api.deviceApi.stop(detail?.deviceCode);
-      if (res?.data) {
-        Taro.showToast({
-          title: '暂停成功',
-          icon: 'success',
-          duration: 2000,
-          success: () => {
-            Taro.reLaunch({ url: ROUTERS.home });
-          }
-        })
-      }
+    else {
+      Taro.showToast({
+        title: '请先绑定设备',
+        icon: 'success',
+        duration: 2000,
+      });
     }
   }
   return (
@@ -77,35 +48,57 @@ function CarDetail() {
         <View className='pa right-arrow at-icon at-icon-chevron-right font-size-18 gray-text-400'></View>
       </View>
       <AtList>
-        <AtListItem title='编码' extraText={detail?.deviceCode} />
-        <AtListItem title='名称' arrow='right' extraText={detail?.nickname} />
-        <AtListItem title='编号' arrow='right' extraText={detail.bindSort + ''} />
-        <AtListItem title='场所' arrow='right' extraText={detail.addressName} />
+        <AtListItem title='编码' extraText={store.detail?.deviceCode} />
+        <AtListItem title='名称' arrow='right' extraText={store.detail?.nickname} />
+        <AtListItem title='编号' arrow='right' extraText={store.detail?.deviceBind?.bindSort + ''} />
+        <AtListItem title='场所' arrow='right' extraText={store.detail?.deviceBind?.address?.addressName} />
         <AtListItem title='类型' arrow='right' extraText='游乐车' />
       </AtList>
       <View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
-        <Text className='font-size-16'>在线状态</Text>
-        <View className={`m-flex items-center p6 font-size-12 ${detail.status !== 3 && detail.status !== 2 ? 'online' : 'offline'}`}>
-          <View className={`at-icon at-icon-${detail.status !== 3 && detail.status !== 2 ? 'check' : 'close'} font-size-13 white-text`}></View>
-          <Text>{detail.status !== 3 && detail.status !== 2 ? '在线' : '离线'}</Text>
+        <Text className='font-size-16'>绑定状态</Text>
+        <View className={`m-flex items-center p6 font-size-12 ${store.detail.status !== 3 && store.detail.status !== 1 ? 'online' : 'offline'}`}>
+          <Text>{store.detail['bindStatusDesc']}</Text>
         </View>
       </View>
-      {detail.status !== 3 && detail.status !== 2 && (<View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
+      { (<View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
         <Text className='font-size-16'>运行状态</Text>
-        <View className={`m-flex items-center p6 font-size-12 ${detail.status ? 'running' : 'stop'}`}>
-          <Text className='px-3'>{detail.statusDesc}</Text>
+        <View className={`m-flex items-center p6 font-size-12 ${store.detail.status ? 'running' : 'stop'}`}>
+          <Text className='px-3'>{store.detail?.statusDesc}</Text>
         </View>
       </View>)}
 
       <View className='m-flex items-center px-6 mt-12'>
         <AtButton className='flex-1 mx-6' type='primary' onClick={handleStartDevice}>
-          {statusObj[detail.status || 0].btnText}
+          远程启动
         </AtButton>
+        <AtButton className='flex-1 mx-6' type='secondary' onClick={async() => {
+          const res = await api.deviceApi.wxacode(store.detail?.deviceCode,`pages/index/index?id=${store.detail?.deviceCode}`);
+          let fileN = new Date().valueOf();
+          let fileP=Taro.env.USER_DATA_PATH+'/'+fileN+'.jpg'
+          Taro.downloadFile({
+            url: res?.data,
+            filePath:fileP,
+            success: (opt) => {
+              console.log(opt,res,'oop')
+              Taro.saveImageToPhotosAlbum({
+                filePath: opt.filePath,
+                success: () => {
+                  Taro.showToast({
+                    title: '保存到相册',
+                    icon: 'success',
+                    duration: 2000,
+                  })
+                }
+              })
+            }
+          })
+          
+        }}>设备码</AtButton>
         <AtButton className='flex-1 mx-6' disabled type='secondary'>编辑设备</AtButton>
         <AtButton className='flex-1 mx-6' type='secondary'>解绑设备</AtButton>
       </View>
     </View>
   )
-}
+})
 
 export default CarDetail

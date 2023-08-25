@@ -16,25 +16,24 @@ const defaultImg = ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.a
 ]
 const status = {
   0: 'online',
-  1: 'online',
-  2: 'offline',
+  1: 'offline',
+  2: 'online',
   3:'offline'
 }
 const runStatus = {
   0: 'stop',
   1: 'running',
-  2: 'offline',
+  2: 'online',
   3:'offline'
 }
 const statu = {
   0: 'check',
-  1: 'check',
-  2: 'close',
+  1: 'close',
+  2: 'check',
   3:'close'
 }
 const Index=observer(()=> {
   customTabBar(0);
-  const [refresherTriggered, setRefresherTriggered] = useState(false)
   const device_store = Store.getStore(DeviceStore)
   const getWechatToken = () => {
     api.getWechatToken()
@@ -42,22 +41,20 @@ const Index=observer(()=> {
         api.getwxacodeunlimit({ token: res.data.accessToken as string,sence: 'deviceCode_865328068118396' })
       })
   }
-
   // 绑定loading
   const [loading, setLoading] = useState(false);
 
   // 绑定onFresh
-  const onRefresherPulling = () => {
-    setLoading(true)
-    console.log('底部')
-    getList()
-  } // getList(); // 异步获取数据 }, []);
-  // 异步更新数据的时候loading设置为false
-  // 绑定onFresh
+  const onRefresherPulling =async () => {
+    setLoading(true);
+    await getList();
+    setLoading(false);
+  } 
 
-  const onScrollToUpper = () => {
-    console.log('顶部');
-    getList();
+  const onScrollToUpper = async() => {
+    setLoading(true);
+    await getList();
+    setLoading(false);
   }
   const getList = ()=> {
     Taro.showToast({icon: 'loading', title: '加载中...', duration: 15000})
@@ -103,7 +100,6 @@ const Index=observer(()=> {
         style={{height:'90vh'}}
         fastDeceleration
         scrollWithAnimation
-        refresherEnabled
         refresherTriggered={loading}
 	      onScrollToLower={onRefresherPulling}
 	      onScrollToUpper={onScrollToUpper}
@@ -115,7 +111,7 @@ const Index=observer(()=> {
                 <View
                   className='card m-flex mt-8 items-center'
                 >
-                  <AtAvatar size="large" image={item.headImg||defaultImg[2]}></AtAvatar>
+                  {/* <AtAvatar size="large" image={item.headImg||defaultImg[2]}></AtAvatar> */}
                   <View className='ml-8 flex-1'>
                     <View className='font-size-16'>{item.nickname}</View>
 
@@ -127,7 +123,7 @@ const Index=observer(()=> {
                         circle
                         className={runStatus[item.status]}
                       >
-                        状态: {item.statusDesc}
+                        设备状态: {item.statusDesc}
                       </AtTag>
                     </View>
                     <View className='mt-5'>
@@ -137,20 +133,20 @@ const Index=observer(()=> {
                         type='primary'
                         circle
                       >
-                        编号：{item.deviceCode}
+                        设备码：{item.deviceCode}
                       </AtTag>
                     </View>
-
                     <View className='mt-5'>
                       <AtTag
                         size='small'
-                        name={item.bindStatusDesc}
+                        name={item.bindSort.toString()}
                         type='primary'
                         circle
                       >
-                        绑定: {item.bindStatusDesc}
+                        序号: {item.bindSort}
                       </AtTag>
                     </View>
+                    
                   </View>
                   <View className={`status ${status[item.status]} m-flex items-center justify-center`}>
                     <View className={`at-icon at-icon-${statu[item.status]} font-size-13 white-text`}></View>
@@ -161,72 +157,6 @@ const Index=observer(()=> {
           })
         }
       </ScrollView>
-      {/* <VirtialList
-        list={device_store.deviceList}
-        listType='multi'
-        autoScrollTop={false}
-        scrollViewProps={{
-          style: {
-            "height": '90vh',
-          },
-          onScrollToLower: onScrollToLower,
-          lowerThreshold: 124,
-        }}
-        onRender={
-          (item) => {
-            return (
-              <Navigator url={ `/packagea/pages/car-detail/index?id=${item.deviceCode}`} hoverClass='navigator-hover'>
-                <View
-                  className='card m-flex mt-8 items-center'
-                >
-                  <AtAvatar size="large" image={item.headImg||defaultImg[2]}></AtAvatar>
-                  <View className='ml-8 flex-1'>
-                    <View className='font-size-16'>{item.nickname}</View>
-
-                    <View className='mt-5'>
-                      <AtTag
-                        size='small'
-                        name={item.statusDesc.toString()}
-                        type='primary'
-                        circle
-                        className={runStatus[item.status]}
-                      >
-                        状态: {item.statusDesc}
-                      </AtTag>
-                    </View>
-                    <View className='mt-5'>
-                      <AtTag
-                        size='small'
-                        name={item.bindSort.toString()}
-                        type='primary'
-                        circle
-                      >
-                        编号：{item.deviceCode}
-                      </AtTag>
-                    </View>
-
-                    <View className='mt-5'>
-                      <AtTag
-                        size='small'
-                        name={item.bindStatusDesc}
-                        type='primary'
-                        circle
-                      >
-                        绑定: {item.bindStatusDesc}
-                      </AtTag>
-                    </View>
-                  </View>
-                  <View className={`status ${status[item.status]} m-flex items-center justify-center`}>
-                    <View className={`at-icon at-icon-${statu[item.status]} font-size-13 white-text`}></View>
-                  </View>
-                </View>
-              </Navigator>
-            )
-          }
-        }
-      >
-
-      </VirtialList> */}
     </View>
   )
 })

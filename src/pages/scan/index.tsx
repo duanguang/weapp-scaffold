@@ -31,7 +31,7 @@ export default class Scan extends Component<PropsWithChildren>{
               addressName:address?.addressName
             }
             Taro.redirectTo({
-              url: `/packagea/pages/car-detail/index?detail=${JSON.stringify(detail)}`,
+              url: `/packagea/pages/car-detail/index?id=${detail?.deviceCode}`,
             })
           }
         }

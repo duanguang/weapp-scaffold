@@ -1,7 +1,7 @@
 import { RootRespone } from 'types/common'
 import {TaroFetch} from './taroFetch'
 import {Device} from '@/constants/const.type'
-import { DeviceBindData, DeviceData, DeviceRecord } from 'types/device'
+import { DeviceBindData, DeviceData, DeviceDetail, DeviceRecord } from 'types/device'
 import { UserData, AccountInfo, VerifyMailData, ForgetPwdData } from 'types/user'
 const baseUrl = 'https://fmh.cabage.cn/fmh/'
 const ERR_CODE = 200
@@ -101,9 +101,9 @@ class DeviceApi{
   dataProcessing(res:DeviceRecord) {
     const status = {
       0: '空闲',
-      1: '运行',
-      2: '离线',
-      3:'下线'
+      1: '下线',
+      2: '运行中',
+      3:'离线'
     }
     const bindStatus = {
       0: '未绑定',
@@ -116,7 +116,7 @@ class DeviceApi{
   async list(address_code?:string) {
     return await taroFetch.request({
       method: 'GET',
-      data:{size:50,current:1},
+      data:{size:300,current:1},
       url: `${baseUrl}device/page`
     }).then((res) => {
       if (Array.isArray(res?.data?.data?.records)) {
@@ -142,6 +142,25 @@ class DeviceApi{
       url: `${baseUrl}device/stop`
     })
     return Promise.resolve(res.data as RootRespone<boolean>)
+  }
+  async get(code: string) {
+    const res = await taroFetch.request({
+      method: 'GET',
+      url: `${baseUrl}device/${code}`
+    })
+    return Promise.resolve(res.data as RootRespone<DeviceDetail.Device>)
+  }
+  async wxacode(deviceCode: string,path:string,width?:string) {
+    const res = await taroFetch.request({
+      method: 'POST',
+      data: {
+        deviceCode,
+        path,
+        width
+      },
+      url: `${baseUrl}manager/device/wxacode`
+    })
+    return Promise.resolve(res.data as RootRespone<string>)
   }
 }
 export const deviceApi = new DeviceApi()
