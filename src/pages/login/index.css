@@ -18,12 +18,12 @@
 .legions-login .login-content {
   border-radius: 24rpx;
   padding: 48rpx;
-  margin-top: -60rpx;
+  margin-top: -80rpx;
   box-shadow: 0 -12rpx 5rpx 3rpx rgba(0, 0, 0, 0.05);
 }
 .legions-login .login-item {
   width: 86%;
-  margin: 30rpx auto;
+  margin: 20rpx auto 0;
 }
 .legions-login .desc {
   padding-top: 168px;
@@ -31,7 +31,7 @@
   height: 551px;
 }
 .legions-login .submit {
-  margin-top: 100rpx;
+  margin-top: 40rpx;
 }
 .legions-login .submit button {
   border-radius: 12rpx;
@@ -49,5 +49,16 @@
   line-height: 54px;
   text-align: center;
   white-space: nowrap;
+}
+.legions-login .close-line {
+  height: 2rpx;
+  width: 32rpx;
+  background-color: #a7a7a7;
+  transform: rotate(45deg);
+  top: 24rpx;
+  left: 16rpx;
+}
+.at-input__title {
+  width: 120rpx;
 }
 /*# sourceMappingURL=./index.css.map */

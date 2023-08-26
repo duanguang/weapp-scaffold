@@ -16,6 +16,11 @@ interface InfoData {
   tipType?: TipType
 }
 
+function validateEmail(email) {
+  var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
 const Sign = () => {
   const [accountInfo, setAccountInfo] = useState<AccountInfo>({} as AccountInfo)
   const [verfiyAccountInfo, setVerfiyAccountInfo] = useState<VerfiyAccountInfo>({} as VerfiyAccountInfo)
@@ -78,6 +83,14 @@ const Sign = () => {
     }
   }
 
+  const showTip = (type:SignPropType) => {
+    Taro.atMessage({
+      'message': verfiyAccountInfo[type]?.text,
+      'type': 'error',
+      duration: 1800
+    })
+  }
+
   const resetVerifyData = () => {
     ['phone', 'mail', 'code', 'passwd', 'rePwd'].forEach((type:SignPropType) => {
       handleVerifyData({type, valid: false, text: ''})
@@ -120,7 +133,7 @@ const Sign = () => {
           NO_MAIL
           tipType = "warning"
           valid = true
-        } else if (!mailReg.test(mail)) {
+        } else if (!validateEmail(mail)) {
           text = VerifyTips.ERR_FMT_MAIL
           tipType = 'error'
           valid = true
@@ -178,6 +191,9 @@ const Sign = () => {
           onChange={(e) => {
             handleChange('phone', e)
           }}
+          onErrorClick={() => {
+            showTip('phone')
+          }}
         />
         <AtInput
           name='mail'
@@ -188,28 +204,39 @@ const Sign = () => {
           onChange={(e) => {
             handleChange('mail', e)
           }}
+          onErrorClick={() => {
+            showTip('mail')
+          }}
         />
         <AtInput
           name='passwd'
           clear
           title='密码'
           type='password'
+          placeholder='请输入6-30位字符密码'
           error={verfiyAccountInfo.passwd?.valid}
           value={accountInfo.passwd}
           onChange={(e) => {
             handleChange('passwd', e)
+          }}
+          onErrorClick={() => {
+            showTip('passwd')
           }}
         />
         <AtInput
           name='rePwd'
           title='确认密码'
           type='password'
+          placeholder='请输入6-30位字符密码'
           clear
           error={verfiyAccountInfo.rePwd?.valid}
           value={accountInfo.rePwd}
           disabled={!accountInfo.passwd}
           onChange={(e) => {
             handleChange('rePwd', e)
+          }}
+          onErrorClick={() => {
+            showTip('rePwd')
           }}
         />
         <AtInput
@@ -221,9 +248,12 @@ const Sign = () => {
           onChange={(e) => {
             handleChange('code', e)
           }}
+          onErrorClick={() => {
+            showTip('code')
+          }}
         >
           {!countdown ? 
-            <AtButton size="small" loading={verifyLoading} className='px-3' onClick={handleVerifyMail}>
+            <AtButton size="small" loading={verifyLoading} className='px-3 verify-btn' onClick={handleVerifyMail}>
               发送邮箱验证码
             </AtButton> :
             (<Text className='gray-text-300 font-size-12'>{countdown}s后再试</Text>)

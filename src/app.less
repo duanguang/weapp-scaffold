@@ -17,7 +17,7 @@ tab-bar {
 .w100 {
   width: 100%;
 }
-view {
+view, scroll-view {
   box-sizing: border-box;
 }
 .page {
@@ -47,6 +47,10 @@ view {
 
 .flex-1{
   flex: 1
+}
+
+.flex-direction {
+  flex-direction: column;
 }
 
 .items-center{
@@ -145,6 +149,9 @@ view {
 .ml-6{
   margin-left: 12rpx
 }
+.mr-6{
+  margin-right: 12rpx
+}
 .mx-8{
   margin: 0 16rpx
 }
@@ -172,6 +179,9 @@ view {
 }
 .px-6{
   padding: 0 12rpx;
+}
+.py-6{
+  padding: 12rpx 0;
 }
 .px-8{
   padding: 0 16rpx;
@@ -221,7 +231,7 @@ view {
   border: 1rpx solid #eee;
 }
 
-.running {
+.running, .online {
   border: 1px solid rgb(113, 204, 52);
   background-color: rgba(113, 204, 52, .15) !important;
   color: #71cc34;
@@ -235,3 +245,70 @@ view {
 .form-content-wrap {
   transition: all .2s
 }
+
+.verify-btn .at-loading__ring {
+  border-color: #348cda transparent transparent transparent;
+}
+
+.br::after{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5, 0.5);
+  transform-origin: 0 0;
+  z-index: 1;
+}
+
+.a-br:after{
+  border: 1px solid #eee;
+  top: 0;
+  z-index: -1;
+}
+
+.mb-br::after{
+  height: 0;
+  bottom: 0;
+  border-bottom: 1px solid #eee;
+}
+
+.check-wrap, .check-radio {
+  height: 44rpx;
+  width: 44rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 100%;
+  &.m-checked {
+    background-color: #fc690a;
+    border-color: #fc690a;
+    color: #f5f5f5;
+  }
+}
+
+.check-radio-wrap{
+  top: 0;
+  left: 0
+}
+
+.check-radio-size-small {
+  height: 36rpx;
+  width: 36rpx;
+}
+.opacity-0 {
+  opacity: 0
+}
+
+.bottom-wrap{
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.at-tag--active.at-tag--primary {
+  color: #FFF;
+  border-color: #fc690a;
+  background-color: #fc690a;
+}
+

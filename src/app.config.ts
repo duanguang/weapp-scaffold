@@ -12,10 +12,10 @@ export default defineAppConfig({
     {
       "root": "packagea",
       "pages": [
-        "pages/dog/index",
         "pages/car-detail/index",
         "pages/bind-car/index",
         "pages/places/index",
+        "pages/add-place/index",
       ]
     }, {
       "root": "packageb",
@@ -28,7 +28,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fc690a',
-    navigationBarTitleText: '福乐多',
+    navigationBarTitleText: '福乐多-游乐',
     navigationBarTextStyle: 'white'
   },
   tabBar: {

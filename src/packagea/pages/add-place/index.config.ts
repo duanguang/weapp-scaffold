@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '注册',
+  navigationBarTitleText: '新建场所',
   navigationBarBackgroundColor: '#ffffff',
   usingComponents: {},
   navigationBarTextStyle: 'black',
