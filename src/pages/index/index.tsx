@@ -134,7 +134,7 @@ const Index=observer(()=> {
                     <View className='mt-5'>
                       <AtTag
                         size='small'
-                        name={item.bindSort.toString()}
+                        name={item.bindSort?item.bindSort.toString():''}
                         type='primary'
                         circle
                       >
@@ -144,7 +144,7 @@ const Index=observer(()=> {
                     <View className='mt-5'>
                       <AtTag
                         size='small'
-                        name={item.bindSort.toString()}
+                        name={item.bindSort?item.bindSort.toString():''}
                         type='primary'
                         circle
                       >
@@ -159,7 +159,7 @@ const Index=observer(()=> {
                 </View>
               </Navigator>
             )
-          }):<View style={{textAlign:'center',paddingTop:'20%'}}> 暂无数据</View>
+          }):<View style={{textAlign:'center',paddingTop:'10%'}}> 暂无数据</View>
         }
       </ScrollView>
     </View>

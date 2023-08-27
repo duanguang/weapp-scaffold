@@ -72,8 +72,8 @@ const CarDetail = observer(() => {
       </View>
       <AtList>
         <AtListItem title='编码' extraText={store.detail?.deviceCode} />
-        <AtListItem title='名称' arrow='right' extraText={store.detail?.nickname} />
-        <AtListItem title='编号' arrow='right' extraText={store.detail?.deviceBind?.bindSort + ''} />
+        <AtListItem title='名称' arrow='right' extraText={store.detail?.nickname||''} />
+        <AtListItem title='编号' arrow='right' extraText={store.detail?.deviceBind?.bindSort?store.detail?.deviceBind?.bindSort:''} />
         <AtListItem title='场所' arrow='right' extraText={store.detail?.deviceBind?.address?.addressName} />
         <AtListItem title='类型' arrow='right' extraText='游乐车' />
       </AtList>
