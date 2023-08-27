@@ -115,22 +115,24 @@ export namespace DeviceDetail {
   // 设备信息接口
   interface Device {
     deviceCode: string; // 设备编码
-     /**设备状态 0-空闲 1-下线 2-运作中 3-离线 */ 
+     /**设备状态 0-空闲 1-运行 2-下线3-离线 */ 
     status: number;
      /** 状态描述 */
     statusDesc: string;
     deviceType: number; // 0-摇摇车
     deviceImg: string; // 图片地址
     remark: string; // 备注
-    bindStatus: number; // 绑定状态 0-未绑定 1-已绑定，取值为0时，deviceBind字段无值
+    /** 绑定状态 0-未绑定 1-已绑定，取值为0时，deviceBind字段无值 */
+    bindStatus: number; // 
     nickname: string; // 设备名称，未绑定时为空
     deviceBind?: DeviceBind; // 绑定信息，可选
+    runInfo: RunInfo;
   }
 
   // 绑定信息接口
   interface DeviceBind {
     deviceCode: string; // 设备编码
-    bindSort: number; // 设备状态 0-空闲 1-下线 2-运作中 3-离线
+    bindSort: number; // 设备状态 
     nickname: string; // 设备名称，未绑定时为空
     merchantCode: string; // 商户编号
     headImg: string; // 图片地址
@@ -160,6 +162,7 @@ export namespace DeviceDetail {
     deviceCode: string; // 设备编码
     status: number; // 状态 0-运行中 1-已停止
     startTime: string; // 开始时间
+    endTime: string;
     updateTime: string; // 最后更新时间
     ruleTime: number; // 计划内运行时长 单位：毫秒（ms）
     realTime: number; // 实际运行时长 单位：毫秒（ms）

@@ -110,7 +110,7 @@ const Index=observer(()=> {
 	      onScrollToUpper={onScrollToUpper}
       >
         {
-          device_store.deviceList.map((item) => {
+          device_store.deviceList.length?device_store.deviceList.map((item) => {
             return (
               <Navigator url={ `/packagea/pages/car-detail/index?id=${item.deviceCode}`} hoverClass='navigator-hover'>
                 <View
@@ -159,7 +159,7 @@ const Index=observer(()=> {
                 </View>
               </Navigator>
             )
-          })
+          }):<View style={{textAlign:'center',paddingTop:'20%'}}> 暂无数据</View>
         }
       </ScrollView>
     </View>

@@ -8,14 +8,29 @@ import { useLoad } from '@tarojs/taro';
 import { Store } from '@/store/core.store'
 import DeviceStore from '@/store/device.store';
 import Taro from '@tarojs/taro';
-
+import * as dayjs from 'dayjs';
 import { observer } from '@/store/core.store';
-const CarDetail=observer(()=> {
+import { countdownTimer } from '@/hooks/countdownTimer';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
+const CarDetail = observer(() => {
   const store = Store.getStore(DeviceStore)
-  useLoad((params: { id: string}) => {
-    store.getDetail(params.id);
+  const { timecount,start } = countdownTimer();
+  const [seconds,setSeconds] = useState(0);
+  useLoad((params: { id: string }) => {
+    store.getDetail(params.id).then(() => {
+      // const x = dayjs().format('YYYY-MM-DD hh:ss:mm')
+      const currTime = dayjs();
+      const ruleTime = store?.detail?.runInfo?.ruleTime / 1000/60;
+      const endTime = dayjs(dayjs(store?.detail?.runInfo?.startTime)).add(ruleTime,'minute');
+      // const endTime = dayjs().add(1,'minute');
+      const ss = dayjs.duration(endTime.diff(currTime)).asSeconds().toFixed(0);
+      setSeconds(parseFloat(ss));
+      start(parseFloat(ss));
+
+    });
   })
-  const handleStartDevice =async () => {
+  const handleStartDevice = async () => {
     if (store.detail?.bindStatus === 1) {
       const res = await api.deviceApi.start(store.detail?.deviceCode);
       if (res?.data) {
@@ -25,7 +40,15 @@ const CarDetail=observer(()=> {
           duration: 2000,
           success: () => {
             const timeid = setTimeout(() => {
-              store.getDetail(store.detail?.deviceCode);
+              store.getDetail(store.detail?.deviceCode).then(() => {
+                const currTime = dayjs();
+                const ruleTime = store?.detail?.runInfo?.ruleTime / 1000/60;
+                const endTime = dayjs(dayjs(store?.detail?.runInfo?.startTime)).add(ruleTime,'minute');
+                // const endTime = dayjs().add(1,'minute');
+                const ss = dayjs.duration(endTime.diff(currTime)).asSeconds().toFixed(0);
+                setSeconds(parseFloat(ss));
+                start(parseFloat(ss));
+              });
               clearTimeout(timeid);
             },3000)
           }
@@ -56,30 +79,44 @@ const CarDetail=observer(()=> {
       </AtList>
       <View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
         <Text className='font-size-16'>绑定状态</Text>
-        <View className={`m-flex items-center p6 font-size-12 ${store.detail.status !== 3 && store.detail.status !== 1 ? 'online' : 'offline'}`}>
-          <Text>{store.detail['bindStatusDesc']}</Text>
+        <View className={`m-flex items-center p6 font-size-12 ${store.detail.bindStatus === 1 ? 'running' : 'stop'}`}>
+          <Text className='px-3'>{store.detail['bindStatusDesc']}</Text>
         </View>
       </View>
-      { (<View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
+      {(<View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
         <Text className='font-size-16'>运行状态</Text>
         <View className={`m-flex items-center p6 font-size-12 ${store.detail.status ? 'running' : 'stop'}`}>
           <Text className='px-3'>{store.detail?.statusDesc}</Text>
         </View>
       </View>)}
 
+      {seconds > 0 && <View className='detail-item bg-white at-row at-list__item at-row__align--center at-row__justify--between'>
+        <Text className='font-size-16'>使用时间</Text>
+        <View className={`m-flex items-center p6 font-size-12 ${store.detail.status ? 'running' : 'stop'}`}>
+          <Text className='px-3'>{timecount}</Text>
+        </View>
+      </View>}
+
       <View className='m-flex items-center px-6 mt-12'>
         <AtButton className='flex-1 mx-6' type='primary' onClick={handleStartDevice}>
           远程启动
         </AtButton>
-        <AtButton className='flex-1 mx-6' type='secondary' onClick={async() => {
+        <AtButton className='flex-1 mx-6' type='secondary' onClick={async () => {
           const res = await api.deviceApi.wxacode(store.detail?.deviceCode,`pages/index/index?id=${store.detail?.deviceCode}`);
+          if (res.code === '204') {
+            Taro.showToast({
+              title: res.message,
+              icon: 'error',
+              duration: 2000,
+            })
+            return
+          }
           let fileN = new Date().valueOf();
-          let fileP=Taro.env.USER_DATA_PATH+'/'+fileN+'.jpg'
+          let fileP = Taro.env.USER_DATA_PATH + '/' + fileN + '.jpg'
           Taro.downloadFile({
             url: res?.data,
-            filePath:fileP,
+            filePath: fileP,
             success: (opt) => {
-              console.log(opt,res,'oop')
               Taro.saveImageToPhotosAlbum({
                 filePath: opt.filePath,
                 success: () => {
@@ -92,10 +129,17 @@ const CarDetail=observer(()=> {
               })
             }
           })
-          
+
         }}>设备码</AtButton>
         <AtButton className='flex-1 mx-6' disabled type='secondary'>编辑设备</AtButton>
-        <AtButton className='flex-1 mx-6' type='secondary'>解绑设备</AtButton>
+        <AtButton className='flex-1 mx-6' type='secondary' onClick={async () => {
+          const res = await api.deviceApi.unbind(store.detail?.deviceCode);
+          Taro.showToast({
+            title: res.message,
+            icon: 'success',
+            duration: 2000,
+          })
+        }}>解绑设备</AtButton>
       </View>
     </View>
   )

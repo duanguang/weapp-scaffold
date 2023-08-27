@@ -101,8 +101,8 @@ class DeviceApi{
   dataProcessing(res:DeviceRecord) {
     const status = {
       0: '空闲',
-      1: '下线',
-      2: '运行中',
+      2: '下线',
+      1: '运行中',
       3:'离线'
     }
     const bindStatus = {
@@ -130,7 +130,7 @@ class DeviceApi{
   async start(device_code:string) {
     const res = await taroFetch.request({
       method: 'PUT',
-      data: {deviceCode:device_code},
+      data: {deviceCode:device_code,goodsCode:'G1000001'},
       url: `${baseUrl}device/start`
     })
     return Promise.resolve(res.data as RootRespone<boolean>)
@@ -161,6 +161,16 @@ class DeviceApi{
       url: `${baseUrl}manager/device/wxacode`
     })
     return Promise.resolve(res.data as RootRespone<string>)
+  }
+  async unbind(deviceCode: string) {
+    const res = await taroFetch.request({
+      method: 'PUT',
+      data: {
+        deviceCode,
+      },
+      url: `${baseUrl}device/unbind`
+    })
+    return Promise.resolve(res.data as RootRespone<boolean>)
   }
 }
 export const deviceApi = new DeviceApi()
